@@ -19,7 +19,7 @@ export const MentoringTab: React.FC<MentoringTabProps> = ({ mentorias }) => {
                 <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
                   mentoria.type === '1:1' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
                 }`}>
-                  {mentoria.type === '1:1' ? 'Mentoria Individual' : 'Mentoria em Grupo'}
+                  {mentoria.type === '1:1' ? 'Call Individual' : 'Call em Grupo'}
                 </span>
                 <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
                   mentoria.status === 'completa' ? 'bg-green-100 text-green-800' :

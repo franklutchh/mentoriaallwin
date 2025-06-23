@@ -60,18 +60,18 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 group">
       {/* Header with favorite and actions */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
             <User className="w-6 h-6 text-blue-600" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-gray-900">{student.name}</h3>
+              <h3 className="font-semibold text-gray-900 truncate">{student.name}</h3>
               {student.favorite && (
-                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <Star className="w-4 h-4 text-yellow-500 fill-current flex-shrink-0" />
               )}
             </div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className={`px-2 py-1 text-xs rounded-full font-medium ${statusConfig.color}`}>
                 {statusConfig.label}
               </span>
@@ -85,7 +85,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
             {/* Days Remaining */}
             {student.status === 'ativo' && (
               <div className="flex items-center gap-1 mt-2">
-                <Clock className="w-3 h-3 text-gray-500" />
+                <Clock className="w-3 h-3 text-gray-500 flex-shrink-0" />
                 <span className={`text-xs font-medium ${
                   daysRemaining <= 30 ? 'text-red-600' : 
                   daysRemaining <= 60 ? 'text-orange-600' : 'text-gray-600'
@@ -98,7 +98,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -176,20 +176,20 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
       {/* Contact Info */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">{student.whatsapp}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Instagram className="w-4 h-4" />
+          <Instagram className="w-4 h-4 flex-shrink-0" />
           <span className="truncate">{student.instagram}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Calendar className="w-4 h-4" />
+          <Calendar className="w-4 h-4 flex-shrink-0" />
           <span>Entrada: {formatDate(student.entryDate)}</span>
         </div>
         {lastMentoria && (
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Target className="w-4 h-4" />
+            <Target className="w-4 h-4 flex-shrink-0" />
             <span>Última sessão: {formatDate(lastMentoria.date)}</span>
           </div>
         )}
@@ -197,7 +197,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
 
       {/* Session Stats */}
       <div className="flex items-center gap-2 mb-4 p-2 bg-gray-50 rounded-lg">
-        <TrendingUp className="w-4 h-4 text-blue-500" />
+        <TrendingUp className="w-4 h-4 text-blue-500 flex-shrink-0" />
         <span className="text-sm text-gray-700 flex-1">
           {studentMentorias.length} sessões realizadas
         </span>
