@@ -172,7 +172,7 @@ export const Calendar: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      {daySession.map((session) => (
+                      {daySessions.map((session) => (
                         <div
                           key={session.id}
                           className={`p-3 rounded-lg border-l-4 ${
