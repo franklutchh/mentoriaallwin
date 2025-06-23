@@ -45,7 +45,7 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-full max-w-md mx-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Agendamento Rápido</h2>
+          <h2 className="text-xl font-bold text-gray-900">Quick Schedule Call</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -59,7 +59,7 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Calendar className="w-4 h-4 inline mr-2" />
-              Data
+              Date
             </label>
             <input
               type="date"
@@ -73,7 +73,7 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Clock className="w-4 h-4 inline mr-2" />
-              Horário
+              Time
             </label>
             <div className="grid grid-cols-3 gap-2">
               {timeSlots.map((time) => (
@@ -95,7 +95,7 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
           {/* Call Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de Call
+              Call Type
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -116,7 +116,7 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                Grupo
+                Group
               </button>
             </div>
           </div>
@@ -126,14 +126,14 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <User className="w-4 h-4 inline mr-2" />
-                Aluno (Opcional)
+                Student (Optional)
               </label>
               <select
                 value={selectedStudent}
                 onChange={(e) => setSelectedStudent(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="">Selecione um aluno...</option>
+                <option value="">Select a student...</option>
                 {activeStudents.map((student) => (
                   <option key={student.id} value={student.id}>
                     {student.name}
@@ -149,13 +149,13 @@ export const CallScheduler: React.FC<CallSchedulerProps> = ({
               onClick={onClose}
               className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               onClick={handleQuickSchedule}
               className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
             >
-              Agendar
+              Schedule
             </button>
           </div>
         </div>

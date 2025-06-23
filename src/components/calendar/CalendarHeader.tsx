@@ -21,8 +21,8 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           <CalendarIcon className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">Agenda Funcional</h1>
-          <p className="text-gray-600 mt-1">Gerencie sua agenda de mentoria de forma eficiente</p>
+          <h1 className="text-4xl font-bold text-gray-900">Functional Calendar</h1>
+          <p className="text-gray-600 mt-1">Manage your mentoring schedule efficiently</p>
         </div>
       </div>
 
@@ -50,7 +50,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-lg font-semibold"
         >
           <Plus className="w-5 h-5" />
-          Agendar Call
+          Schedule Call
         </button>
       </div>
     </div>

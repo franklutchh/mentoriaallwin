@@ -32,13 +32,6 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
   };
 
   const getUrgencyBadge = (urgency: PriorityAction['urgency']) => {
-    const labels = {
-      critical: 'crítico',
-      high: 'alto',
-      medium: 'médio',
-      low: 'baixo'
-    };
-    
     switch (urgency) {
       case 'critical': return 'bg-red-100 text-red-800';
       case 'high': return 'bg-orange-100 text-orange-800';
@@ -46,16 +39,6 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
       case 'low': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const getUrgencyLabel = (urgency: PriorityAction['urgency']) => {
-    const labels = {
-      critical: 'crítico',
-      high: 'alto',
-      medium: 'médio',
-      low: 'baixo'
-    };
-    return labels[urgency] || urgency;
   };
 
   const handleActionClick = (priority: PriorityAction) => {
@@ -67,11 +50,11 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
   if (priorities.length === 0) {
     return (
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Prioridades de Hoje</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Priorities</h2>
         <div className="text-center py-8">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Tudo em dia!</h3>
-          <p className="text-gray-600">Nenhuma prioridade urgente para hoje. Ótimo trabalho!</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">All caught up!</h3>
+          <p className="text-gray-600">No urgent priorities for today. Great work!</p>
         </div>
       </div>
     );
@@ -80,9 +63,9 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Prioridades de Hoje</h2>
+        <h2 className="text-xl font-bold text-gray-900">Today's Priorities</h2>
         <span className="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
-          {priorities.length} itens
+          {priorities.length} items
         </span>
       </div>
 
@@ -104,7 +87,7 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-gray-900">{priority.title}</h3>
                       <span className={`text-xs px-2 py-1 rounded-full font-medium ${getUrgencyBadge(priority.urgency)}`}>
-                        {getUrgencyLabel(priority.urgency)}
+                        {priority.urgency}
                       </span>
                     </div>
                     <p className="text-gray-600 text-sm mb-2">{priority.description}</p>
@@ -125,7 +108,7 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
                   }}
                   className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-200"
                 >
-                  Executar
+                  Take Action
                 </button>
               </div>
             </div>

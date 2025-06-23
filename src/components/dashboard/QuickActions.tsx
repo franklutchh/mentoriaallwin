@@ -9,55 +9,55 @@ export const QuickActions: React.FC = () => {
   const actions = [
     {
       id: 'new-call',
-      label: 'Agendar Call',
+      label: 'Schedule Call',
       icon: Plus,
-      description: 'Marcar nova sessão de mentoria',
+      description: 'Book a new mentoring session',
       action: () => navigate('/calls/new'),
       color: 'bg-blue-500 hover:bg-blue-600',
       urgent: false
     },
     {
       id: 'today-agenda',
-      label: 'Agenda de Hoje',
+      label: "Today's Agenda",
       icon: Calendar,
-      description: 'Ver e gerenciar agenda do dia',
+      description: 'View and manage today\'s schedule',
       action: () => navigate('/calendar'),
       color: 'bg-purple-500 hover:bg-purple-600',
       urgent: false
     },
     {
       id: 'student-overview',
-      label: 'Visão dos Alunos',
+      label: 'Student Overview',
       icon: Users,
-      description: 'Revisão rápida status dos alunos',
+      description: 'Quick student status review',
       action: () => navigate('/students'),
       color: 'bg-green-500 hover:bg-green-600',
       urgent: false
     },
     {
       id: 'weekly-review',
-      label: 'Revisão Semanal',
+      label: 'Weekly Review',
       icon: FileText,
-      description: 'Gerar relatório de progresso semanal',
-      action: () => console.log('Revisão semanal'),
+      description: 'Generate weekly progress report',
+      action: () => console.log('Weekly review'),
       color: 'bg-indigo-500 hover:bg-indigo-600',
       urgent: false
     },
     {
       id: 'urgent-items',
-      label: 'Itens Urgentes',
+      label: 'Urgent Items',
       icon: AlertTriangle,
-      description: 'Tratar itens de prioridade crítica',
-      action: () => console.log('Itens urgentes'),
+      description: 'Handle critical priority items',
+      action: () => console.log('Urgent items'),
       color: 'bg-red-500 hover:bg-red-600',
       urgent: true
     },
     {
       id: 'time-tracker',
-      label: 'Controle de Tempo',
+      label: 'Time Tracker',
       icon: Clock,
-      description: 'Acompanhar tempo e produtividade',
-      action: () => console.log('Controle de tempo'),
+      description: 'Track mentoring time and productivity',
+      action: () => console.log('Time tracker'),
       color: 'bg-orange-500 hover:bg-orange-600',
       urgent: false
     }
@@ -65,7 +65,7 @@ export const QuickActions: React.FC = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Ações Rápidas</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {actions.map((action) => {
           const Icon = action.icon;

@@ -45,11 +45,11 @@ export const SmartAlerts: React.FC<SmartAlertsProps> = ({ alerts }) => {
   if (alerts.length === 0) {
     return (
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Alertas Inteligentes</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Smart Alerts</h2>
         <div className="text-center py-8">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Tudo tranquilo!</h3>
-          <p className="text-gray-600">Nenhum alerta requer sua atenção no momento.</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">All clear!</h3>
+          <p className="text-gray-600">No alerts requiring your attention right now.</p>
         </div>
       </div>
     );
@@ -58,9 +58,9 @@ export const SmartAlerts: React.FC<SmartAlertsProps> = ({ alerts }) => {
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Alertas Inteligentes</h2>
+        <h2 className="text-xl font-bold text-gray-900">Smart Alerts</h2>
         <span className="bg-red-100 text-red-800 text-sm font-semibold px-3 py-1 rounded-full">
-          {alerts.filter(a => a.actionRequired).length} precisam de atenção
+          {alerts.filter(a => a.actionRequired).length} need attention
         </span>
       </div>
 
@@ -81,7 +81,7 @@ export const SmartAlerts: React.FC<SmartAlertsProps> = ({ alerts }) => {
                     
                     {alert.daysOverdue && (
                       <div className="flex items-center gap-1 text-sm opacity-75 mb-3">
-                        <span>{alert.daysOverdue} dias em atraso</span>
+                        <span>{alert.daysOverdue} days overdue</span>
                       </div>
                     )}
 
