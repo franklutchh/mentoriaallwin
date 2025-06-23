@@ -1,25 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { WeeklyPriorities } from './WeeklyPriorities';
 import { ProductivityCards } from './dashboard/ProductivityCards';
 import { PerformanceSummary } from './dashboard/PerformanceSummary';
-import { AdvancedFilters } from './dashboard/AdvancedFilters';
-import { StudentsGrid } from './dashboard/StudentsGrid';
 import { useMentoringContext } from '../contexts/MentoringContext';
 
 export const Dashboard: React.FC = () => {
   const { students, mentorias } = useMentoringContext();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'ativo' | 'inativo' | 'sob-revisao' | 'com-pendencia' | 'finalizado'>('all');
-  const [groupFilter, setGroupFilter] = useState<string>('all');
-
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
-    const matchesGroup = groupFilter === 'all' || student.group === groupFilter;
-    return matchesSearch && matchesStatus && matchesGroup;
-  });
 
   const activeStudents = students.filter(s => s.status === 'ativo').length;
   const totalStudents = students.length;
@@ -29,7 +16,17 @@ export const Dashboard: React.FC = () => {
   const completedSessions = mentorias.filter(m => m.status === 'completa').length;
   const trafficSessions = mentorias.filter(m => m.tags.includes('trafego')).length;
 
-  const groups = ['all', ...Array.from(new Set(students.map(s => s.group).filter(Boolean)))];
+  // Calcular sessões da semana atual
+  const today = new Date();
+  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+  
+  const weekSessions = mentorias.filter(session => {
+    const sessionDate = new Date(session.date);
+    return sessionDate >= startOfWeek && sessionDate <= endOfWeek;
+  });
+
+  const pendingSessions = mentorias.filter(m => m.status === 'agendada').length;
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -45,19 +42,11 @@ export const Dashboard: React.FC = () => {
         completedSessions={completedSessions}
         pendingStudents={pendingStudents}
         studentsWithDelayedTasks={studentsWithDelayedTasks}
+        weekSessions={weekSessions.length}
+        pendingSessions={pendingSessions}
       />
 
       <WeeklyPriorities />
-
-      <AdvancedFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        groupFilter={groupFilter}
-        setGroupFilter={setGroupFilter}
-        groups={groups}
-      />
 
       <PerformanceSummary
         activeStudents={activeStudents}
@@ -66,8 +55,6 @@ export const Dashboard: React.FC = () => {
         totalSessions={totalSessions}
         trafficSessions={trafficSessions}
       />
-
-      <StudentsGrid students={filteredStudents} />
     </div>
   );
 };

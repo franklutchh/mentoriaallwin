@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Dashboard } from "./components/Dashboard";
+import { Students } from "./components/Students";
+import { Sessions } from "./components/Sessions";
 import { StudentForm } from "./components/StudentForm";
 import { StudentDetails } from "./components/StudentDetails";
 import { MentoringForm } from "./components/MentoringForm";
@@ -26,9 +28,10 @@ const App = () => (
           <Layout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/students" element={<Dashboard />} />
+              <Route path="/students" element={<Students />} />
               <Route path="/students/new" element={<StudentForm />} />
               <Route path="/students/:id" element={<StudentDetails />} />
+              <Route path="/sessions" element={<Sessions />} />
               <Route path="/mentoring/new" element={<MentoringForm />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/knowledge" element={<KnowledgeBase />} />

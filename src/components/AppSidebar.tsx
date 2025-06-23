@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Users, Calendar, BookOpen } from 'lucide-react';
+import { Home, Users, Calendar, BookOpen, Video } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -21,6 +21,7 @@ export const AppSidebar: React.FC = () => {
   const menuItems = [
     { icon: Home, label: 'Dashboard', path: '/' },
     { icon: Users, label: 'Alunos', path: '/students' },
+    { icon: Video, label: 'Sessões', path: '/sessions' },
     { icon: Calendar, label: 'Agenda', path: '/calendar' },
     { icon: BookOpen, label: 'Biblioteca', path: '/knowledge' },
   ];
