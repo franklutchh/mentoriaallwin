@@ -15,7 +15,7 @@ export const QuickActions: React.FC = () => {
       icon: UserPlus,
       description: 'Cadastrar novo aluno na mentoria',
       action: () => navigate('/students/new'),
-      color: 'bg-indigo-500 hover:bg-indigo-600',
+      color: 'bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700',
       urgent: false
     },
     {
@@ -24,7 +24,7 @@ export const QuickActions: React.FC = () => {
       icon: Plus,
       description: 'Marcar nova sessão de mentoria',
       action: () => navigate('/calls/new'),
-      color: 'bg-blue-500 hover:bg-blue-600',
+      color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
       urgent: false
     },
     {
@@ -33,7 +33,7 @@ export const QuickActions: React.FC = () => {
       icon: Calendar,
       description: 'Ver e gerenciar agenda do dia',
       action: () => navigate('/calendar'),
-      color: 'bg-purple-500 hover:bg-purple-600',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
       urgent: false
     },
     {
@@ -42,7 +42,7 @@ export const QuickActions: React.FC = () => {
       icon: Users,
       description: 'Revisão rápida do status dos alunos',
       action: () => navigate('/students'),
-      color: 'bg-green-500 hover:bg-green-600',
+      color: 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
       urgent: false
     },
     {
@@ -55,7 +55,6 @@ export const QuickActions: React.FC = () => {
           title: "Estatísticas de Produtividade",
           description: "Mostrando suas métricas de mentoria da semana atual.",
         });
-        // Scroll para a seção de métricas
         setTimeout(() => {
           const metricsSection = document.querySelector('[data-metrics-section]');
           if (metricsSection) {
@@ -63,7 +62,7 @@ export const QuickActions: React.FC = () => {
           }
         }, 500);
       },
-      color: 'bg-orange-500 hover:bg-orange-600',
+      color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       urgent: false
     },
     {
@@ -77,8 +76,7 @@ export const QuickActions: React.FC = () => {
           description: "Sessão de 25 minutos iniciada. Concentre-se nas suas tarefas mais importantes!",
         });
         
-        // Simular timer de foco
-        let timeLeft = 25 * 60; // 25 minutos em segundos
+        let timeLeft = 25 * 60;
         const focusTimer = setInterval(() => {
           timeLeft -= 1;
           if (timeLeft <= 0) {
@@ -90,14 +88,20 @@ export const QuickActions: React.FC = () => {
           }
         }, 1000);
       },
-      color: 'bg-red-500 hover:bg-red-600',
+      color: 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
       urgent: false
     }
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition-colors duration-300">
-      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Ações Rápidas</h2>
+    <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 p-8 transition-all duration-300">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg">
+          <span className="text-white text-lg">⚡</span>
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Ações Rápidas</h2>
+      </div>
+      
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {actions.map((action) => {
           const Icon = action.icon;
@@ -105,15 +109,20 @@ export const QuickActions: React.FC = () => {
             <button
               key={action.id}
               onClick={action.action}
-              className={`${action.color} text-white p-4 rounded-xl transition-all hover:scale-105 hover:shadow-lg group relative`}
+              className={`${action.color} text-white p-6 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl group relative overflow-hidden`}
             >
               {action.urgent && (
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-pulse shadow-lg"></div>
               )}
-              <div className="flex flex-col items-center text-center">
-                <Icon className="w-6 h-6 mb-2" />
-                <span className="text-sm font-semibold">{action.label}</span>
-                <span className="text-xs opacity-80 mt-1 hidden group-hover:block">
+              
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+              
+              <div className="relative flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <span className="text-sm font-bold mb-1">{action.label}</span>
+                <span className="text-xs opacity-90 leading-tight line-clamp-2">
                   {action.description}
                 </span>
               </div>

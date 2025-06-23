@@ -21,7 +21,7 @@ export const AppSidebar: React.FC = () => {
   const menuItems = [
     { icon: Home, label: 'Dashboard', path: '/' },
     { icon: Users, label: 'Alunos', path: '/students' },
-    { icon: Phone, label: 'Calls', path: '/calls' },
+    { icon: Phone, label: 'Chamadas', path: '/calls' },
     { icon: Calendar, label: 'Agenda', path: '/calendar' },
     { icon: BookOpen, label: 'Biblioteca', path: '/knowledge' },
   ];
@@ -32,22 +32,22 @@ export const AppSidebar: React.FC = () => {
   };
 
   return (
-    <Sidebar className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 backdrop-blur-xl transition-colors duration-300">
-      <SidebarHeader className="p-8 border-b border-gray-200 dark:border-gray-700">
+    <Sidebar className="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 backdrop-blur-xl transition-colors duration-300">
+      <SidebarHeader className="p-6 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">A</span>
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl">A</span>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">All Win</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Sistema de Calls</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">All Win</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Sistema de Mentoria</p>
           </div>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-4">
+          <SidebarGroupLabel className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-4 px-2">
             Navegação
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -60,8 +60,8 @@ export const AppSidebar: React.FC = () => {
                     className={`
                       w-full justify-start px-4 py-3 rounded-xl font-medium transition-all duration-200
                       ${isActive(item.path) 
-                        ? 'bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700 shadow-sm' 
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 hover:scale-[1.02] hover:shadow-sm'
+                        ? 'bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900/40 dark:to-purple-800/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700 shadow-sm' 
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:scale-[1.02] hover:shadow-sm'
                       }
                     `}
                   >
@@ -74,17 +74,28 @@ export const AppSidebar: React.FC = () => {
           </SidebarGroupContent>
         </SidebarGroup>
         
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <div className="bg-gradient-to-br from-purple-50 to-purple-25 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-4 border border-purple-100 dark:border-purple-800">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Quick Stats</h3>
-            <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
-              <div className="flex justify-between">
-                <span>Calls Today</span>
-                <span className="font-medium text-purple-600 dark:text-purple-400">5</span>
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <div className="bg-gradient-to-br from-purple-50 via-purple-25 to-indigo-50 dark:from-purple-900/30 dark:via-purple-800/20 dark:to-indigo-900/30 rounded-2xl p-5 border border-purple-100 dark:border-purple-800/50 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-6 h-6 rounded-lg bg-purple-500 flex items-center justify-center">
+                <span className="text-white text-xs font-bold">📊</span>
               </div>
-              <div className="flex justify-between">
-                <span>Active Students</span>
-                <span className="font-medium text-purple-600 dark:text-purple-400">24</span>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Estatísticas Rápidas</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-white/60 dark:bg-gray-800/60 rounded-xl backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Calls Hoje</span>
+                </div>
+                <span className="text-lg font-bold text-purple-600 dark:text-purple-400">5</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-white/60 dark:bg-gray-800/60 rounded-xl backdrop-blur-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-400"></div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Alunos Ativos</span>
+                </div>
+                <span className="text-lg font-bold text-purple-600 dark:text-purple-400">24</span>
               </div>
             </div>
           </div>
