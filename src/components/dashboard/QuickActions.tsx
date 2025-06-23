@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Users, Settings, TrendingUp, UserPlus } from 'lucide-react';
+import { Plus, Calendar, Users, TrendingUp, UserPlus, Target } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const QuickActions: React.FC = () => {
@@ -67,64 +67,30 @@ export const QuickActions: React.FC = () => {
       urgent: false
     },
     {
-      id: 'settings',
-      label: 'Configurações',
-      icon: Settings,
-      description: 'Configurações do sistema e tema',
+      id: 'productivity-focus',
+      label: 'Modo Foco',
+      icon: Target,
+      description: 'Ativar sessão de trabalho focado',
       action: () => {
-        // Abrir modal de configurações
-        const settingsModal = document.querySelector('[data-settings-modal]');
-        if (settingsModal) {
-          settingsModal.classList.remove('hidden');
-        } else {
-          // Criar e mostrar modal temporário
-          const modal = document.createElement('div');
-          modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-          modal.setAttribute('data-settings-modal', '');
-          modal.innerHTML = `
-            <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-full max-w-md mx-4">
-              <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900">Configurações</h2>
-                <button onclick="this.closest('[data-settings-modal]').remove()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-              </div>
-              <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-700">Tema Escuro</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer" onchange="document.documentElement.classList.toggle('dark')">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-700">Notificações</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer" checked>
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-700">Som de Alertas</span>
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer" checked>
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-              <div class="mt-6 pt-4 border-t border-gray-200">
-                <button onclick="this.closest('[data-settings-modal]').remove()" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                  Salvar Configurações
-                </button>
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-        }
+        toast({
+          title: "Modo Foco Ativado",
+          description: "Sessão de 25 minutos iniciada. Concentre-se nas suas tarefas mais importantes!",
+        });
+        
+        // Simular timer de foco
+        let timeLeft = 25 * 60; // 25 minutos em segundos
+        const focusTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            clearInterval(focusTimer);
+            toast({
+              title: "Sessão de Foco Concluída!",
+              description: "Parabéns! Você completou 25 minutos de trabalho focado. Que tal uma pausa?",
+            });
+          }
+        }, 1000);
       },
-      color: 'bg-gray-500 hover:bg-gray-600',
+      color: 'bg-red-500 hover:bg-red-600',
       urgent: false
     }
   ];
