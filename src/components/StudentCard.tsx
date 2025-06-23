@@ -57,10 +57,10 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
     : null;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 group">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 group relative">
       {/* Header with favorite and actions */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3 flex-1">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
             <User className="w-6 h-6 text-blue-600" />
           </div>
@@ -98,13 +98,13 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-3 relative z-10">
           <button
             onClick={(e) => {
               e.stopPropagation();
               navigate('/mentoring/new', { state: { studentId: student.id } });
             }}
-            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-blue-50 rounded-lg transition-colors relative z-20"
             title="Nova Sessão"
           >
             <Plus className="w-4 h-4 text-blue-600" />
@@ -114,7 +114,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
               e.stopPropagation();
               // Toggle favorite logic would go here
             }}
-            className="p-2 hover:bg-yellow-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-yellow-50 rounded-lg transition-colors relative z-20"
             title="Favoritar"
           >
             <Star className="w-4 h-4 text-yellow-600" />
@@ -124,7 +124,7 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
               e.stopPropagation();
               navigate('/calendar');
             }}
-            className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-green-50 rounded-lg transition-colors relative z-20"
             title="Ver Agenda"
           >
             <Video className="w-4 h-4 text-green-600" />
