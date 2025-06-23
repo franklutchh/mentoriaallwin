@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { User, Calendar, MessageCircle, Instagram, Plus, Star, Video, Target, TrendingUp, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useMentoringContext } from '../contexts/useMentoringContext';
+import { useMentoringContext } from '../contexts/MentoringContext';
 
 interface Student {
   id: string;

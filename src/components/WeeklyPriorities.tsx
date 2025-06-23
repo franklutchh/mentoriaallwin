@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { AlertTriangle, Clock, Calendar, TrendingDown } from 'lucide-react';
-import { useMentoringContext } from '../contexts/useMentoringContext';
+import { useMentoringContext } from '../contexts/MentoringContext';
 import { useNavigate } from 'react-router-dom';
 
 export const WeeklyPriorities: React.FC = () => {

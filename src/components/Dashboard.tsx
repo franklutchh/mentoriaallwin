@@ -3,7 +3,7 @@ import React from 'react';
 import { WeeklyPriorities } from './WeeklyPriorities';
 import { ProductivityCards } from './dashboard/ProductivityCards';
 import { PerformanceSummary } from './dashboard/PerformanceSummary';
-import { useMentoringContext } from '../contexts/useMentoringContext';
+import { useMentoringContext } from '../contexts/MentoringContext';
 
 export const Dashboard: React.FC = () => {
   const { students, mentorias } = useMentoringContext();
