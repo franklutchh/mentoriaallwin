@@ -48,3 +48,43 @@ export interface ProductivityMetrics {
   weeklyProgress: number;
   avgResponseTime: number;
 }
+
+// Aliases for component compatibility
+export interface Priority {
+  id: string;
+  title: string;
+  description: string;
+  level: 'baixa' | 'media' | 'alta';
+  student: string;
+  estimatedTime: string;
+  completed?: boolean;
+}
+
+export interface Alert {
+  id: string;
+  title: string;
+  message: string;
+  details: string;
+  type: 'student-delay' | 'missing-followup' | 'urgent';
+  severity: 'baixa' | 'media' | 'alta';
+}
+
+export interface Goal {
+  id: string;
+  title: string;
+  description: string;
+  target: number;
+  current: number;
+  unit: string;
+  daysLeft: number;
+}
+
+export interface ProductivityMetric {
+  id: string;
+  label: string;
+  value: string;
+  change: string;
+  trend: 'up' | 'down' | 'stable';
+  type: 'calls' | 'students' | 'hours' | 'general';
+  period: string;
+}
