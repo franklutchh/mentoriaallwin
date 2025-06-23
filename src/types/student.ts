@@ -23,7 +23,7 @@ export interface Mentoring {
   topics: string;
   actions: string;
   recordingUrl?: string;
-  status: 'completa' | 'em-andamento' | 'precisa-revisao';
+  status: 'agendada' | 'completa' | 'em-andamento' | 'precisa-revisao';
   tags: string[];
   sessionLink?: string;
 }

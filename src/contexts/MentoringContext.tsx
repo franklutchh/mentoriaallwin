@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
 
@@ -94,6 +93,28 @@ export const MentoringProvider: React.FC<MentoringProviderProps> = ({ children }
       actions: 'Conectar com 5 pessoas do LinkedIn',
       status: 'em-andamento',
       tags: ['networking', 'relacionamentos']
+    },
+    {
+      id: '3',
+      studentId: '1',
+      date: '2024-01-25',
+      time: '15:00',
+      type: '1:1',
+      topics: 'Revisão de estratégias de tráfego pago',
+      actions: 'Implementar nova campanha no Facebook Ads',
+      status: 'agendada',
+      tags: ['trafego', 'facebook-ads']
+    },
+    {
+      id: '4',
+      studentId: '3',
+      date: '2024-01-26',
+      time: '10:00',
+      type: 'grupo',
+      topics: 'Workshop de copywriting',
+      actions: 'Criar 3 headlines para teste A/B',
+      status: 'agendada',
+      tags: ['copy', 'workshop']
     }
   ]);
 
