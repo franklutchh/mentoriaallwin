@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Calendar, Eye, Star } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useMentoringContext } from '../contexts/MentoringContext';
 import { StudentCard } from './StudentCard';
@@ -51,31 +51,7 @@ export const Students: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredStudents.map((student) => (
-          <div key={student.id} className="relative">
-            <StudentCard student={student} />
-            <div className="absolute top-4 right-4 flex gap-2">
-              <button
-                onClick={() => navigate(`/sessions/new?student=${student.id}`)}
-                className="bg-green-100 hover:bg-green-200 text-green-700 p-2 rounded-full transition-colors"
-                title="Agendar Sessão"
-              >
-                <Calendar className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => navigate(`/students/${student.id}`)}
-                className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded-full transition-colors"
-                title="Ver Detalhes"
-              >
-                <Eye className="w-4 h-4" />
-              </button>
-              <button
-                className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 p-2 rounded-full transition-colors"
-                title="Favoritar"
-              >
-                <Star className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+          <StudentCard key={student.id} student={student} />
         ))}
       </div>
 
