@@ -1,4 +1,5 @@
 
+
 export interface Student {
   id: string;
   name: string;
@@ -15,6 +16,20 @@ export interface Student {
 }
 
 export interface Call {
+  id: string;
+  studentId: string;
+  date: string;
+  time: string;
+  type: '1:1' | 'grupo';
+  topics: string;
+  actions: string;
+  recordingUrl?: string;
+  status: 'agendada' | 'completa' | 'em-andamento' | 'precisa-revisao';
+  tags: string[];
+  sessionLink?: string;
+}
+
+export interface Mentoring {
   id: string;
   studentId: string;
   date: string;
@@ -49,3 +64,4 @@ export interface WeeklyPriorities {
   noRecentSession: Student[];
   lastMonth: Student[];
 }
+
