@@ -1,8 +1,13 @@
 
 import React from 'react';
-import { User, Calendar, MessageCircle, Instagram, Plus, Star, Video, Target, TrendingUp, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useMentoringContext } from '../contexts/MentoringContext';
+import { StudentHeader } from './student-card/StudentHeader';
+import { StudentActions } from './student-card/StudentActions';
+import { StudentProgress } from './student-card/StudentProgress';
+import { StudentContactInfo } from './student-card/StudentContactInfo';
+import { StudentStats } from './student-card/StudentStats';
+import { StudentTags } from './student-card/StudentTags';
 
 interface Student {
   id: string;
@@ -27,28 +32,6 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
   const navigate = useNavigate();
   const { getDaysRemaining, getStudentMentorias } = useMentoringContext();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-
-  const getStatusConfig = (status: string) => {
-    switch (status) {
-      case 'ativo':
-        return { color: 'bg-green-100 text-green-800', label: 'Ativo' };
-      case 'inativo':
-        return { color: 'bg-gray-100 text-gray-800', label: 'Inativo' };
-      case 'sob-revisao':
-        return { color: 'bg-yellow-100 text-yellow-800', label: 'Sob Revisão' };
-      case 'com-pendencia':
-        return { color: 'bg-red-100 text-red-800', label: 'Com Pendência' };
-      case 'finalizado':
-        return { color: 'bg-purple-100 text-purple-800', label: 'Finalizado' };
-      default:
-        return { color: 'bg-gray-100 text-gray-800', label: status };
-    }
-  };
-
-  const statusConfig = getStatusConfig(student.status);
   const progressPercentage = student.totalTasks ? Math.round((student.tasksCompleted! / student.totalTasks) * 100) : 0;
   const daysRemaining = getDaysRemaining(student.id);
   const studentMentorias = getStudentMentorias(student.id);
@@ -60,151 +43,32 @@ export const StudentCard: React.FC<StudentCardProps> = ({ student }) => {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all duration-200 group relative">
       {/* Header with favorite and actions */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <User className="w-6 h-6 text-blue-600" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-gray-900 truncate">{student.name}</h3>
-              {student.favorite && (
-                <Star className="w-4 h-4 text-yellow-500 fill-current flex-shrink-0" />
-              )}
-            </div>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className={`px-2 py-1 text-xs rounded-full font-medium ${statusConfig.color}`}>
-                {statusConfig.label}
-              </span>
-              {student.group && (
-                <span className="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700 font-medium">
-                  {student.group}
-                </span>
-              )}
-            </div>
-            
-            {/* Days Remaining */}
-            {student.status === 'ativo' && (
-              <div className="flex items-center gap-1 mt-2">
-                <Clock className="w-3 h-3 text-gray-500 flex-shrink-0" />
-                <span className={`text-xs font-medium ${
-                  daysRemaining <= 30 ? 'text-red-600' : 
-                  daysRemaining <= 60 ? 'text-orange-600' : 'text-gray-600'
-                }`}>
-                  {daysRemaining} dias restantes
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-3 relative z-10">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate('/mentoring/new', { state: { studentId: student.id } });
-            }}
-            className="p-2 hover:bg-blue-50 rounded-lg transition-colors relative z-20"
-            title="Nova Sessão"
-          >
-            <Plus className="w-4 h-4 text-blue-600" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              // Toggle favorite logic would go here
-            }}
-            className="p-2 hover:bg-yellow-50 rounded-lg transition-colors relative z-20"
-            title="Favoritar"
-          >
-            <Star className="w-4 h-4 text-yellow-600" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate('/calendar');
-            }}
-            className="p-2 hover:bg-green-50 rounded-lg transition-colors relative z-20"
-            title="Ver Agenda"
-          >
-            <Video className="w-4 h-4 text-green-600" />
-          </button>
-        </div>
+        <StudentHeader student={student} daysRemaining={daysRemaining} />
+        <StudentActions studentId={student.id} />
       </div>
 
       {/* Progress Bar */}
-      {student.totalTasks && (
-        <div className="mb-4">
-          <div className="flex items-center justify-between text-sm mb-1">
-            <span className="text-gray-600">Progresso do Plano</span>
-            <span className="font-medium text-gray-900">{progressPercentage}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className={`h-2 rounded-full transition-all duration-300 ${
-                progressPercentage >= 80 ? 'bg-green-500' : 
-                progressPercentage >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-              }`}
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {student.tasksCompleted}/{student.totalTasks} tarefas concluídas
-          </p>
-        </div>
-      )}
+      <StudentProgress 
+        tasksCompleted={student.tasksCompleted} 
+        totalTasks={student.totalTasks} 
+      />
 
       {/* Tags */}
-      {student.tags && student.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-4">
-          {student.tags.slice(0, 3).map((tag, index) => (
-            <span
-              key={index}
-              className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-700 font-medium"
-            >
-              {tag}
-            </span>
-          ))}
-          {student.tags.length > 3 && (
-            <span className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-500">
-              +{student.tags.length - 3}
-            </span>
-          )}
-        </div>
-      )}
+      <StudentTags tags={student.tags} />
 
       {/* Contact Info */}
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <MessageCircle className="w-4 h-4 flex-shrink-0" />
-          <span className="truncate">{student.whatsapp}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Instagram className="w-4 h-4 flex-shrink-0" />
-          <span className="truncate">{student.instagram}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Calendar className="w-4 h-4 flex-shrink-0" />
-          <span>Entrada: {formatDate(student.entryDate)}</span>
-        </div>
-        {lastMentoria && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Target className="w-4 h-4 flex-shrink-0" />
-            <span>Última sessão: {formatDate(lastMentoria.date)}</span>
-          </div>
-        )}
-      </div>
+      <StudentContactInfo
+        whatsapp={student.whatsapp}
+        instagram={student.instagram}
+        entryDate={student.entryDate}
+        lastMentoriaDate={lastMentoria?.date}
+      />
 
       {/* Session Stats */}
-      <div className="flex items-center gap-2 mb-4 p-2 bg-gray-50 rounded-lg">
-        <TrendingUp className="w-4 h-4 text-blue-500 flex-shrink-0" />
-        <span className="text-sm text-gray-700 flex-1">
-          {studentMentorias.length} sessões realizadas
-        </span>
-        <span className="text-xs text-gray-500">
-          {progressPercentage >= 80 ? 'Excelente' : progressPercentage >= 60 ? 'Boa' : 'Atenção'}
-        </span>
-      </div>
+      <StudentStats 
+        sessionCount={studentMentorias.length}
+        progressPercentage={progressPercentage}
+      />
 
       <button
         onClick={() => navigate(`/students/${student.id}`)}
