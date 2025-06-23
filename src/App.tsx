@@ -11,6 +11,7 @@ import { StudentDetails } from "./components/StudentDetails";
 import { MentoringForm } from "./components/MentoringForm";
 import { Calendar } from "./components/Calendar";
 import { KnowledgeBase } from "./components/KnowledgeBase";
+import { MentoringProvider } from "./contexts/MentoringContext";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,20 +21,22 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/students" element={<Dashboard />} />
-            <Route path="/students/new" element={<StudentForm />} />
-            <Route path="/students/:id" element={<StudentDetails />} />
-            <Route path="/mentoring/new" element={<MentoringForm />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/knowledge" element={<KnowledgeBase />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+      <MentoringProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/students" element={<Dashboard />} />
+              <Route path="/students/new" element={<StudentForm />} />
+              <Route path="/students/:id" element={<StudentDetails />} />
+              <Route path="/mentoring/new" element={<MentoringForm />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/knowledge" element={<KnowledgeBase />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </MentoringProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

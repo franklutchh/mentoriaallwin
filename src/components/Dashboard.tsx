@@ -2,72 +2,16 @@
 import React, { useState } from 'react';
 import { Search, Plus, Filter, TrendingUp, Clock, AlertTriangle, Users, Target, Calendar } from 'lucide-react';
 import { StudentCard } from './StudentCard';
+import { WeeklyPriorities } from './WeeklyPriorities';
+import { useMentoringContext } from '../contexts/MentoringContext';
 import { useNavigate } from 'react-router-dom';
-
-interface Student {
-  id: string;
-  name: string;
-  whatsapp: string;
-  instagram: string;
-  status: 'ativo' | 'inativo' | 'sob-revisao' | 'com-pendencia';
-  entryDate: string;
-  lastSession?: string;
-  group?: string;
-  tags?: string[];
-  tasksCompleted?: number;
-  totalTasks?: number;
-  favorite?: boolean;
-}
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { students, mentorias } = useMentoringContext();
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'ativo' | 'inativo' | 'sob-revisao' | 'com-pendencia'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'ativo' | 'inativo' | 'sob-revisao' | 'com-pendencia' | 'finalizado'>('all');
   const [groupFilter, setGroupFilter] = useState<string>('all');
-
-  // Mock data expandido
-  const [students] = useState<Student[]>([
-    {
-      id: '1',
-      name: 'Ana Silva',
-      whatsapp: '+55 11 99999-9999',
-      instagram: '@ana.silva',
-      status: 'ativo',
-      entryDate: '2024-01-15',
-      lastSession: '2024-01-20',
-      group: 'Turma A',
-      tags: ['trafego', 'copy'],
-      tasksCompleted: 8,
-      totalTasks: 12,
-      favorite: true
-    },
-    {
-      id: '2',
-      name: 'Carlos Santos',
-      whatsapp: '+55 11 88888-8888',
-      instagram: '@carlos.santos',
-      status: 'com-pendencia',
-      entryDate: '2024-01-10',
-      lastSession: '2024-01-18',
-      group: 'Turma A',
-      tags: ['mentalidade', 'funil'],
-      tasksCompleted: 3,
-      totalTasks: 10
-    },
-    {
-      id: '3',
-      name: 'Maria Oliveira',
-      whatsapp: '+55 11 77777-7777',
-      instagram: '@maria.oliveira',
-      status: 'sob-revisao',
-      entryDate: '2023-12-01',
-      lastSession: '2023-12-15',
-      group: 'Turma B',
-      tags: ['copy'],
-      tasksCompleted: 15,
-      totalTasks: 15
-    }
-  ]);
 
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -81,6 +25,8 @@ export const Dashboard: React.FC = () => {
   const totalStudents = students.length;
   const pendingStudents = students.filter(s => s.status === 'com-pendencia').length;
   const studentsWithDelayedTasks = students.filter(s => s.tasksCompleted! < s.totalTasks! * 0.7).length;
+  const totalSessions = mentorias.length;
+  const completedSessions = mentorias.filter(m => m.status === 'completa').length;
 
   const groups = ['all', ...Array.from(new Set(students.map(s => s.group).filter(Boolean)))];
 
@@ -104,11 +50,11 @@ export const Dashboard: React.FC = () => {
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-500">Sessões esta Semana</h3>
+            <h3 className="text-sm font-medium text-gray-500">Sessões Realizadas</h3>
             <Calendar className="w-5 h-5 text-green-500" />
           </div>
-          <p className="text-3xl font-bold text-green-600">12</p>
-          <p className="text-sm text-gray-600 mt-1">3 pendentes de registro</p>
+          <p className="text-3xl font-bold text-green-600">{totalSessions}</p>
+          <p className="text-sm text-gray-600 mt-1">{completedSessions} finalizadas</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -129,6 +75,9 @@ export const Dashboard: React.FC = () => {
           <p className="text-sm text-gray-600 mt-1">Alunos com &lt; 70% conclusão</p>
         </div>
       </div>
+
+      {/* WeeklyPriorities Component */}
+      <WeeklyPriorities />
 
       {/* Advanced Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -157,6 +106,7 @@ export const Dashboard: React.FC = () => {
                 <option value="inativo">Inativos</option>
                 <option value="sob-revisao">Sob Revisão</option>
                 <option value="com-pendencia">Com Pendência</option>
+                <option value="finalizado">Finalizados</option>
               </select>
             </div>
 
@@ -194,16 +144,16 @@ export const Dashboard: React.FC = () => {
             <p className="text-sm text-gray-600">Taxa de Atividade</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">87%</p>
-            <p className="text-sm text-gray-600">Conclusão Média</p>
+            <p className="text-2xl font-bold text-green-600">{totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0}%</p>
+            <p className="text-sm text-gray-600">Sessões Completas</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-purple-600">4.2</p>
-            <p className="text-sm text-gray-600">Sessions/Semana</p>
+            <p className="text-2xl font-bold text-purple-600">{(totalSessions / Math.max(activeStudents, 1)).toFixed(1)}</p>
+            <p className="text-sm text-gray-600">Sessões/Aluno</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-orange-600">24h</p>
-            <p className="text-sm text-gray-600">Tempo Médio</p>
+            <p className="text-2xl font-bold text-orange-600">{mentorias.filter(m => m.tags.includes('trafego')).length}</p>
+            <p className="text-sm text-gray-600">Sessões Tráfego</p>
           </div>
         </div>
       </div>
