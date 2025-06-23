@@ -32,22 +32,22 @@ export const AppSidebar: React.FC = () => {
   };
 
   return (
-    <Sidebar className="bg-sidebar/80 backdrop-blur-xl border-r border-sidebar-border/60">
-      <SidebarHeader className="p-8 border-b border-sidebar-border/40">
+    <Sidebar className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 backdrop-blur-xl transition-colors duration-300">
+      <SidebarHeader className="p-8 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-purple to-brand-purple-medium flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
             <span className="text-white font-bold text-lg">A</span>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">All Win</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Sistema de Calls</p>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">All Win</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Sistema de Calls</p>
           </div>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">
+          <SidebarGroupLabel className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-4">
             Navegação
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -60,12 +60,12 @@ export const AppSidebar: React.FC = () => {
                     className={`
                       w-full justify-start px-4 py-3 rounded-xl font-medium transition-all duration-200
                       ${isActive(item.path) 
-                        ? 'bg-gradient-to-r from-brand-purple/10 to-brand-purple-medium/10 text-brand-purple-medium border border-brand-purple/20 shadow-apple' 
-                        : 'hover:bg-sidebar-accent text-sidebar-foreground hover:scale-[1.02] hover:shadow-apple-lg'
+                        ? 'bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-800/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700 shadow-sm' 
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 hover:scale-[1.02] hover:shadow-sm'
                       }
                     `}
                   >
-                    <item.icon className={`w-5 h-5 mr-4 ${isActive(item.path) ? 'text-brand-purple' : ''}`} />
+                    <item.icon className={`w-5 h-5 mr-4 ${isActive(item.path) ? 'text-purple-600 dark:text-purple-400' : 'text-gray-600 dark:text-gray-400'}`} />
                     <span className="text-base">{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -74,17 +74,17 @@ export const AppSidebar: React.FC = () => {
           </SidebarGroupContent>
         </SidebarGroup>
         
-        <div className="mt-8 pt-6 border-t border-sidebar-border/40">
-          <div className="bg-gradient-to-br from-brand-purple/5 to-brand-purple-medium/5 rounded-xl p-4 border border-brand-purple/10">
-            <h3 className="text-sm font-semibold text-foreground mb-2">Quick Stats</h3>
-            <div className="space-y-2 text-xs text-muted-foreground">
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="bg-gradient-to-br from-purple-50 to-purple-25 dark:from-purple-900/20 dark:to-purple-800/10 rounded-xl p-4 border border-purple-100 dark:border-purple-800">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Quick Stats</h3>
+            <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
               <div className="flex justify-between">
                 <span>Calls Today</span>
-                <span className="font-medium text-brand-purple">5</span>
+                <span className="font-medium text-purple-600 dark:text-purple-400">5</span>
               </div>
               <div className="flex justify-between">
                 <span>Active Students</span>
-                <span className="font-medium text-brand-purple-medium">24</span>
+                <span className="font-medium text-purple-600 dark:text-purple-400">24</span>
               </div>
             </div>
           </div>

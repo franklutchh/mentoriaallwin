@@ -93,5 +93,15 @@
 
   body {
     @apply bg-background text-foreground transition-colors duration-300;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  }
+
+  html {
+    @apply transition-colors duration-300;
+  }
+
+  /* Garantir que elementos root também tenham transição suave */
+  #root {
+    @apply transition-colors duration-300;
   }
 }
