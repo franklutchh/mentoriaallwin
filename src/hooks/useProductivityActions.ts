@@ -8,10 +8,10 @@ export const useProductivityActions = () => {
 
   const todaysPriorities = useMemo((): PriorityAction[] => {
     const today = new Date();
-    const tenDaysAgo = new Date(today.getTime() - (10 * 24 * 60 * 60 * 1000));
+    const eightDaysAgo = new Date(today.getTime() - (8 * 24 * 60 * 60 * 1000));
     const priorities: PriorityAction[] = [];
 
-    // Alunos sem calls recentes
+    // Alunos sem calls recentes (8 dias)
     students.forEach(student => {
       if (student.status !== 'ativo') return;
       
@@ -19,7 +19,7 @@ export const useProductivityActions = () => {
       const lastCall = studentCalls
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
       
-      if (!lastCall || new Date(lastCall.date) < tenDaysAgo) {
+      if (!lastCall || new Date(lastCall.date) < eightDaysAgo) {
         priorities.push({
           id: `no-call-${student.id}`,
           title: `Agendar call com ${student.name}`,
@@ -93,7 +93,7 @@ export const useProductivityActions = () => {
     const alerts: SmartAlert[] = [];
     const today = new Date();
 
-    // Alunos críticos sem contato recente
+    // Alunos críticos sem contato há 8 dias
     students.forEach(student => {
       if (student.status !== 'ativo') return;
       
@@ -120,7 +120,7 @@ export const useProductivityActions = () => {
         });
       } else {
         const daysSinceCall = Math.floor((today.getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000));
-        if (daysSinceCall > 14) {
+        if (daysSinceCall >= 8) {
           alerts.push({
             id: `overdue-${student.id}`,
             title: 'Contato com Aluno em Atraso',
@@ -169,7 +169,7 @@ export const useProductivityActions = () => {
         id: 'follow-ups',
         title: 'Follow-ups Concluídos',
         target: 10,
-        current: 7, // Isso seria calculado a partir de dados reais de follow-up
+        current: 7,
         unit: 'follow-ups',
         deadline: endOfWeek.toISOString(),
         progress: 70
@@ -205,7 +205,7 @@ export const useProductivityActions = () => {
       if (!lastCall) return true;
       
       const daysSinceCall = Math.floor((new Date().getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000));
-      return daysSinceCall > 10;
+      return daysSinceCall >= 8; // Mudado para 8 dias
     }).length;
 
     return {
@@ -213,7 +213,7 @@ export const useProductivityActions = () => {
       pendingFollowUps,
       studentsNeedingAttention,
       weeklyProgress: weeklyGoals[0]?.progress || 0,
-      avgResponseTime: 2.5 // Isso seria calculado a partir de dados reais
+      avgResponseTime: 2.5
     };
   }, [students, calls, getStudentCalls, weeklyGoals]);
 

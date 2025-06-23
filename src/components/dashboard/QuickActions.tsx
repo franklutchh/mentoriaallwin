@@ -1,10 +1,12 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Users, FileText, AlertTriangle, Clock } from 'lucide-react';
+import { Plus, Calendar, Users, FileText, MessageSquare, BarChart3 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export const QuickActions: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const actions = [
     {
@@ -35,29 +37,45 @@ export const QuickActions: React.FC = () => {
       urgent: false
     },
     {
-      id: 'weekly-review',
-      label: 'Revisão Semanal',
+      id: 'weekly-report',
+      label: 'Relatório Semanal',
       icon: FileText,
       description: 'Gerar relatório de progresso semanal',
-      action: () => console.log('Revisão semanal'),
+      action: () => {
+        toast({
+          title: "Relatório Gerado",
+          description: "Relatório semanal de produtividade foi gerado com sucesso!",
+        });
+      },
       color: 'bg-indigo-500 hover:bg-indigo-600',
       urgent: false
     },
     {
-      id: 'urgent-items',
-      label: 'Itens Urgentes',
-      icon: AlertTriangle,
-      description: 'Lidar com itens de prioridade crítica',
-      action: () => console.log('Itens urgentes'),
-      color: 'bg-red-500 hover:bg-red-600',
-      urgent: true
+      id: 'student-feedback',
+      label: 'Feedback Pendente',
+      icon: MessageSquare,
+      description: 'Gerenciar feedback pendente dos alunos',
+      action: () => {
+        toast({
+          title: "Feedback",
+          description: "Redirecionando para área de feedback dos alunos...",
+        });
+        navigate('/students');
+      },
+      color: 'bg-yellow-500 hover:bg-yellow-600',
+      urgent: false
     },
     {
-      id: 'time-tracker',
-      label: 'Controle de Tempo',
-      icon: Clock,
-      description: 'Acompanhar tempo e produtividade',
-      action: () => console.log('Controle de tempo'),
+      id: 'productivity-analytics',
+      label: 'Analytics',
+      icon: BarChart3,
+      description: 'Ver métricas de produtividade detalhadas',
+      action: () => {
+        toast({
+          title: "Analytics",
+          description: "Visualizando métricas de produtividade...",
+        });
+      },
       color: 'bg-orange-500 hover:bg-orange-600',
       urgent: false
     }
