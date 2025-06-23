@@ -1,45 +1,13 @@
+
 import React, { useState } from 'react';
-import { ArrowLeft, Plus, User, MessageCircle, Instagram, Calendar, Target, TrendingUp, Download, Star, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Plus, Star, Download, TrendingUp, Target, Clock, AlertCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-interface Student {
-  id: string;
-  name: string;
-  whatsapp: string;
-  instagram: string;
-  status: 'ativo' | 'inativo' | 'sob-revisao' | 'com-pendencia';
-  entryDate: string;
-  group?: string;
-  tags?: string[];
-  tasksCompleted?: number;
-  totalTasks?: number;
-}
-
-interface Mentoring {
-  id: string;
-  date: string;
-  type: '1:1' | 'grupo';
-  topics: string;
-  actions: string;
-  recordingUrl?: string;
-  status: 'completa' | 'em-andamento' | 'precisa-revisao';
-  tags: string[];
-}
-
-interface ActionItem {
-  id: string;
-  description: string;
-  status: 'pendente' | 'em-progresso' | 'concluido';
-  dueDate?: string;
-  priority: 'baixa' | 'media' | 'alta';
-}
-
-interface FollowUpItem {
-  id: string;
-  description: string;
-  completed: boolean;
-  createdAt: string;
-}
+import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
+import { OverviewTab } from './student-details/OverviewTab';
+import { MentoringTab } from './student-details/MentoringTab';
+import { ActionPlanTab } from './student-details/ActionPlanTab';
+import { FollowUpTab } from './student-details/FollowUpTab';
+import { PerformanceOverview } from './student-details/PerformanceOverview';
 
 export const StudentDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -118,34 +86,6 @@ export const StudentDetails: React.FC = () => {
     { id: 'notas', label: 'Notas' }
   ];
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-
-  const getStatusColor = (status: ActionItem['status']) => {
-    switch (status) {
-      case 'concluido': return 'bg-green-100 text-green-800';
-      case 'em-progresso': return 'bg-yellow-100 text-yellow-800';
-      case 'pendente': return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getPriorityColor = (priority: ActionItem['priority']) => {
-    switch (priority) {
-      case 'alta': return 'bg-red-100 text-red-800';
-      case 'media': return 'bg-yellow-100 text-yellow-800';
-      case 'baixa': return 'bg-green-100 text-green-800';
-    }
-  };
-
-  const getStatusLabel = (status: ActionItem['status']) => {
-    switch (status) {
-      case 'concluido': return 'Concluído';
-      case 'em-progresso': return 'Em Progresso';
-      case 'pendente': return 'Pendente';
-    }
-  };
-
   const progressPercentage = student.totalTasks ? Math.round((student.tasksCompleted! / student.totalTasks) * 100) : 0;
 
   const exportReport = () => {
@@ -199,55 +139,11 @@ export const StudentDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Performance Overview */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-8 border border-blue-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Performance Geral</h3>
-            <div className="flex items-center gap-6">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">{mentorias.length}</p>
-                <p className="text-sm text-gray-600">Sessões</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">{progressPercentage}%</p>
-                <p className="text-sm text-gray-600">Conclusão</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-purple-600">{followUpItems.filter(f => !f.completed).length}</p>
-                <p className="text-sm text-gray-600">Follow-ups</p>
-              </div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="w-24 h-24 relative">
-              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  stroke="#e5e7eb"
-                  strokeWidth="8"
-                  fill="none"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  stroke="#3b82f6"
-                  strokeWidth="8"
-                  fill="none"
-                  strokeDasharray={`${progressPercentage * 2.51} 251`}
-                  className="transition-all duration-500"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xl font-bold text-gray-900">{progressPercentage}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PerformanceOverview 
+        student={student} 
+        mentorias={mentorias} 
+        followUpItems={followUpItems} 
+      />
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-8">
@@ -270,203 +166,19 @@ export const StudentDetails: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'resumo' && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Informações do Aluno</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <User className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">Nome Completo</p>
-                  <p className="font-medium text-gray-900">{student.name}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <MessageCircle className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">WhatsApp</p>
-                  <p className="font-medium text-gray-900">{student.whatsapp}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Instagram className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">Instagram</p>
-                  <p className="font-medium text-gray-900">{student.instagram}</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">Data de Entrada</p>
-                  <p className="font-medium text-gray-900">{formatDate(student.entryDate)}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-5 h-5 flex items-center justify-center">
-                  <div className={`w-3 h-3 rounded-full ${student.status === 'ativo' ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Status</p>
-                  <p className="font-medium text-gray-900 capitalize">{student.status}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">Total de Mentorias</p>
-                  <p className="font-medium text-gray-900">{mentorias.length}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <OverviewTab student={student} mentorias={mentorias} />
       )}
 
       {activeTab === 'mentorias' && (
-        <div className="space-y-6">
-          {mentorias.map((mentoria) => (
-            <div key={mentoria.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900">{formatDate(mentoria.date)}</h3>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
-                      mentoria.type === '1:1' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
-                    }`}>
-                      {mentoria.type === '1:1' ? 'Mentoria Individual' : 'Mentoria em Grupo'}
-                    </span>
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
-                      mentoria.status === 'completa' ? 'bg-green-100 text-green-800' :
-                      mentoria.status === 'em-andamento' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {mentoria.status === 'completa' ? 'Completa' :
-                       mentoria.status === 'em-andamento' ? 'Em Andamento' : 'Precisa Revisão'}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {mentoria.tags.map((tag, index) => (
-                      <span key={index} className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-700">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                {mentoria.recordingUrl && (
-                  <a
-                    href={mentoria.recordingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    Ver Gravação
-                  </a>
-                )}
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-1">Tópicos Discutidos</h4>
-                  <p className="text-gray-600">{mentoria.topics}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-1">Ações Combinadas</h4>
-                  <p className="text-gray-600">{mentoria.actions}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <MentoringTab mentorias={mentorias} />
       )}
 
       {activeTab === 'plano' && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Plano de Ação</h2>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-              <Plus className="w-4 h-4" />
-              Nova Tarefa
-            </button>
-          </div>
-          <div className="space-y-4">
-            {actionItems.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-                <input
-                  type="checkbox"
-                  checked={item.status === 'concluido'}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-                <div className="flex-1">
-                  <p className={`${item.status === 'concluido'? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                    {item.description}
-                  </p>
-                  {item.dueDate && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Prazo: {formatDate(item.dueDate)}
-                    </p>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <span className={`px-2 py-1 text-xs rounded-full font-medium ${getPriorityColor(item.priority)}`}>
-                    {item.priority.charAt(0).toUpperCase() + item.priority.slice(1)}
-                  </span>
-                  <span className={`px-2 py-1 text-xs rounded-full font-medium ${getStatusColor(item.status)}`}>
-                    {getStatusLabel(item.status)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <ActionPlanTab actionItems={actionItems} />
       )}
 
       {activeTab === 'follow-up' && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Follow-up Checklist</h2>
-            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-              <Plus className="w-4 h-4" />
-              Novo Follow-up
-            </button>
-          </div>
-          <div className="space-y-3">
-            {followUpItems.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
-                <button
-                  onClick={() => {
-                    setFollowUpItems(items => 
-                      items.map(i => i.id === item.id ? {...i, completed: !i.completed} : i)
-                    );
-                  }}
-                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    item.completed 
-                      ? 'bg-green-500 border-green-500 text-white' 
-                      : 'border-gray-300 hover:border-green-400'
-                  }`}
-                >
-                  {item.completed && <CheckCircle className="w-3 h-3" />}
-                </button>
-                <div className="flex-1">
-                  <p className={`${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                    {item.description}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Criado em: {formatDate(item.createdAt)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {item.completed ? (
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Clock className="w-4 h-4 text-orange-500" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <FollowUpTab followUpItems={followUpItems} setFollowUpItems={setFollowUpItems} />
       )}
 
       {activeTab === 'relatorio' && (
