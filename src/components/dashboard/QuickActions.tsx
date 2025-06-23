@@ -96,8 +96,8 @@ export const QuickActions: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Ações Rápidas</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition-colors duration-300">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Ações Rápidas</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {actions.map((action) => {
           const Icon = action.icon;
