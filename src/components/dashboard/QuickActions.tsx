@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Users, FileText, MessageSquare, BarChart3 } from 'lucide-react';
+import { Plus, Calendar, Users, Settings, MessageSquare, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const QuickActions: React.FC = () => {
@@ -37,20 +37,6 @@ export const QuickActions: React.FC = () => {
       urgent: false
     },
     {
-      id: 'weekly-report',
-      label: 'Relatório Semanal',
-      icon: FileText,
-      description: 'Gerar relatório de progresso semanal',
-      action: () => {
-        toast({
-          title: "Relatório Gerado",
-          description: "Relatório semanal de produtividade foi gerado com sucesso!",
-        });
-      },
-      color: 'bg-indigo-500 hover:bg-indigo-600',
-      urgent: false
-    },
-    {
       id: 'student-feedback',
       label: 'Feedback Pendente',
       icon: MessageSquare,
@@ -66,17 +52,38 @@ export const QuickActions: React.FC = () => {
       urgent: false
     },
     {
-      id: 'productivity-analytics',
-      label: 'Analytics',
-      icon: BarChart3,
-      description: 'Ver métricas de produtividade detalhadas',
+      id: 'productivity-stats',
+      label: 'Estatísticas',
+      icon: TrendingUp,
+      description: 'Ver resumo de produtividade da semana',
       action: () => {
         toast({
-          title: "Analytics",
-          description: "Visualizando métricas de produtividade...",
+          title: "Estatísticas de Produtividade",
+          description: "Mostrando suas métricas de mentoria da semana atual.",
         });
+        // Scroll para a seção de métricas
+        setTimeout(() => {
+          const metricsSection = document.querySelector('[data-metrics-section]');
+          if (metricsSection) {
+            metricsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 500);
       },
       color: 'bg-orange-500 hover:bg-orange-600',
+      urgent: false
+    },
+    {
+      id: 'quick-settings',
+      label: 'Configurações',
+      icon: Settings,
+      description: 'Acesso rápido às configurações',
+      action: () => {
+        toast({
+          title: "Configurações",
+          description: "Funcionalidade em desenvolvimento...",
+        });
+      },
+      color: 'bg-gray-500 hover:bg-gray-600',
       urgent: false
     }
   ];
