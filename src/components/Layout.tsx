@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Sidebar } from './Sidebar';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from './AppSidebar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,21 +9,18 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <div className="group fixed left-0 top-0 h-full z-50">
-        {/* Hover trigger area */}
-        <div className="w-4 h-full absolute left-0 top-0 bg-transparent group-hover:bg-blue-50 transition-colors" />
-        
-        {/* Sidebar that slides in on hover */}
-        <div className="transform -translate-x-60 group-hover:translate-x-0 transition-transform duration-300 ease-in-out">
-          <Sidebar />
-        </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <SidebarInset className="flex-1">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+          </header>
+          <main className="flex-1 p-4">
+            {children}
+          </main>
+        </SidebarInset>
       </div>
-      
-      {/* Main content with padding only when sidebar is visible */}
-      <main className="flex-1 group-hover:ml-64 transition-all duration-300 ease-in-out">
-        {children}
-      </main>
-    </div>
+    </SidebarProvider>
   );
 };
