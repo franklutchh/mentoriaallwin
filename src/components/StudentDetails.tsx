@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
@@ -88,6 +87,10 @@ export const StudentDetails: React.FC = () => {
     console.log('Exportando relatório completo...');
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as 'resumo' | 'mentorias' | 'plano' | 'follow-up' | 'relatorio' | 'notas');
+  };
+
   return (
     <div className="p-8">
       <StudentHeader student={student} onExportReport={exportReport} />
@@ -98,7 +101,7 @@ export const StudentDetails: React.FC = () => {
         followUpItems={followUpItems} 
       />
 
-      <StudentTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <StudentTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Tab Content */}
       {activeTab === 'resumo' && (
