@@ -26,7 +26,7 @@ export const WeeklyGoals: React.FC<WeeklyGoalsProps> = ({ goals }) => {
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center gap-3 mb-6">
         <Target className="w-6 h-6 text-purple-600" />
-        <h2 className="text-xl font-bold text-gray-900">Weekly Goals</h2>
+        <h2 className="text-xl font-bold text-gray-900">Metas Semanais</h2>
       </div>
 
       <div className="space-y-6">
@@ -49,19 +49,19 @@ export const WeeklyGoals: React.FC<WeeklyGoalsProps> = ({ goals }) => {
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-1 text-gray-600">
                 <TrendingUp className="w-4 h-4" />
-                <span>{Math.round(goal.progress)}% complete</span>
+                <span>{Math.round(goal.progress)}% concluído</span>
               </div>
               <div className="flex items-center gap-1 text-gray-600">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  {Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000))} days left
+                  {Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000))} dias restantes
                 </span>
               </div>
             </div>
 
             {goal.progress >= 100 && (
               <div className="mt-2 text-sm text-green-700 font-medium">
-                🎉 Goal achieved!
+                🎉 Meta alcançada!
               </div>
             )}
           </div>

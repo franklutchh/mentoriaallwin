@@ -11,7 +11,7 @@ export const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ metric
   const metricCards = [
     {
       id: 'todays-calls',
-      title: "Today's Calls",
+      title: 'Calls de Hoje',
       value: metrics.todaysCalls,
       unit: 'calls',
       icon: Phone,
@@ -20,25 +20,25 @@ export const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ metric
     },
     {
       id: 'pending-followups',
-      title: 'Pending Follow-ups',
+      title: 'Follow-ups Pendentes',
       value: metrics.pendingFollowUps,
-      unit: 'items',
+      unit: 'itens',
       icon: Clock,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50'
     },
     {
       id: 'students-attention',
-      title: 'Need Attention',
+      title: 'Precisam de Atenção',
       value: metrics.studentsNeedingAttention,
-      unit: 'students',
+      unit: 'alunos',
       icon: AlertTriangle,
       color: 'text-red-600',
       bgColor: 'bg-red-50'
     },
     {
       id: 'weekly-progress',
-      title: 'Weekly Progress',
+      title: 'Progresso Semanal',
       value: Math.round(metrics.weeklyProgress),
       unit: '%',
       icon: TrendingUp,
@@ -51,7 +51,7 @@ export const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ metric
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex items-center gap-3 mb-6">
         <Target className="w-6 h-6 text-purple-600" />
-        <h2 className="text-xl font-bold text-gray-900">Productivity Metrics</h2>
+        <h2 className="text-xl font-bold text-gray-900">Métricas de Produtividade</h2>
       </div>
 
       <div className="space-y-4">
@@ -83,13 +83,13 @@ export const ProductivityMetrics: React.FC<ProductivityMetricsProps> = ({ metric
               <Users className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Avg Response Time</p>
+              <p className="text-sm font-medium text-gray-600">Tempo Médio de Resposta</p>
               <p className="text-2xl font-bold text-gray-900">
-                {metrics.avgResponseTime} days
+                {metrics.avgResponseTime} dias
               </p>
               <p className="text-xs text-purple-700 mt-1">
-                {metrics.avgResponseTime <= 3 ? '🟢 Excellent' : 
-                 metrics.avgResponseTime <= 7 ? '🟡 Good' : '🔴 Needs improvement'}
+                {metrics.avgResponseTime <= 3 ? '🟢 Excelente' : 
+                 metrics.avgResponseTime <= 7 ? '🟡 Bom' : '🔴 Precisa melhorar'}
               </p>
             </div>
           </div>
