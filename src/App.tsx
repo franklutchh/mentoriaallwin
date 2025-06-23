@@ -7,13 +7,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { Dashboard } from "./components/Dashboard";
 import { Students } from "./components/Students";
-import { Sessions } from "./components/Sessions";
+import { Calls } from "./components/Calls";
 import { StudentForm } from "./components/StudentForm";
 import { StudentDetails } from "./components/StudentDetails";
-import { MentoringForm } from "./components/MentoringForm";
+import { CallForm } from "./components/CallForm";
 import { Calendar } from "./components/Calendar";
 import { KnowledgeBase } from "./components/KnowledgeBase";
-import { MentoringProvider } from "./contexts/MentoringContext";
+import { CallsProvider } from "./contexts/CallsContext";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,7 +23,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <MentoringProvider>
+      <CallsProvider>
         <BrowserRouter>
           <Layout>
             <Routes>
@@ -31,15 +31,16 @@ const App = () => (
               <Route path="/students" element={<Students />} />
               <Route path="/students/new" element={<StudentForm />} />
               <Route path="/students/:id" element={<StudentDetails />} />
-              <Route path="/sessions" element={<Sessions />} />
-              <Route path="/mentoring/new" element={<MentoringForm />} />
+              <Route path="/calls" element={<Calls />} />
+              <Route path="/calls/new" element={<CallForm />} />
+              <Route path="/mentoring/new" element={<CallForm />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/knowledge" element={<KnowledgeBase />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
         </BrowserRouter>
-      </MentoringProvider>
+      </CallsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

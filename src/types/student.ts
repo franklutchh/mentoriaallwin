@@ -14,7 +14,7 @@ export interface Student {
   favorite?: boolean;
 }
 
-export interface Mentoring {
+export interface Call {
   id: string;
   studentId: string;
   date: string;

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowLeft, Plus, Star, Download } from 'lucide-react';
+import { ArrowLeft, Plus, Star, Download, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Student } from '../../types/student';
 
@@ -16,22 +16,25 @@ export const StudentHeader: React.FC<StudentHeaderProps> = ({ student, onExportR
     <div className="mb-8">
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4 transition-colors"
+        className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-all hover:scale-105 transform duration-200"
       >
         <ArrowLeft className="w-4 h-4" />
-        Voltar ao Dashboard
+        <span className="font-medium">Voltar ao Dashboard</span>
       </button>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-purple to-brand-purple-medium flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">{student.name.charAt(0)}</span>
+          </div>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold text-gray-900">{student.name}</h1>
-              <Star className="w-6 h-6 text-yellow-500 cursor-pointer hover:scale-110 transition-transform" />
+            <div className="flex items-center gap-4 mb-2">
+              <h1 className="text-4xl font-bold text-foreground">{student.name}</h1>
+              <Star className="w-7 h-7 text-yellow-500 cursor-pointer hover:scale-110 transition-transform hover:text-yellow-600" />
             </div>
-            <p className="text-gray-600 mt-1">Mentoria individual - {student.group}</p>
-            <div className="flex items-center gap-2 mt-2">
+            <p className="text-muted-foreground text-lg">Mentoria individual • {student.group}</p>
+            <div className="flex flex-wrap gap-2 mt-3">
               {student.tags?.map((tag, index) => (
-                <span key={index} className="px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-700 font-medium">
+                <span key={index} className="px-3 py-1 text-sm rounded-full bg-brand-purple/10 text-brand-purple font-medium">
                   {tag}
                 </span>
               ))}
@@ -41,17 +44,17 @@ export const StudentHeader: React.FC<StudentHeaderProps> = ({ student, onExportR
         <div className="flex gap-3">
           <button
             onClick={onExportReport}
-            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="bg-muted hover:bg-muted/80 text-foreground px-5 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 font-medium"
           >
             <Download className="w-4 h-4" />
             Exportar Relatório
           </button>
           <button
-            onClick={() => navigate('/mentoring/new', { state: { studentId: student.id } })}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            onClick={() => navigate('/calls/new', { state: { studentId: student.id } })}
+            className="bg-gradient-to-r from-brand-purple to-brand-purple-medium hover:from-brand-purple-medium hover:to-brand-purple-dark text-white px-5 py-3 rounded-xl flex items-center gap-3 transition-all hover:scale-105 shadow-apple-lg font-semibold"
           >
-            <Plus className="w-4 h-4" />
-            Nova Mentoria
+            <Phone className="w-4 h-4" />
+            Nova Call
           </button>
         </div>
       </div>
