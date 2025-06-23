@@ -21,7 +21,7 @@ export const WeeklyPriorities: React.FC = () => {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingDown className="w-5 h-5 text-red-600" />
-            <h3 className="font-semibold text-red-800">Progresso < 50%</h3>
+            <h3 className="font-semibold text-red-800">Progresso &lt; 50%</h3>
           </div>
           <div className="space-y-2">
             {priorities.lowProgress.length === 0 ? (
