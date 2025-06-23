@@ -31,7 +31,9 @@ export const StudentDetails: React.FC = () => {
   const [mentorias] = useState<Mentoring[]>([
     {
       id: '1',
+      studentId: '1',
       date: '2024-01-20',
+      time: '14:00',
       type: '1:1',
       topics: 'Definição de objetivos, planejamento estratégico',
       actions: 'Criar plano de ação para próximos 30 dias',
@@ -41,7 +43,9 @@ export const StudentDetails: React.FC = () => {
     },
     {
       id: '2',
+      studentId: '1',
       date: '2024-01-18',
+      time: '19:00',
       type: 'grupo',
       topics: 'Networking e relacionamentos profissionais',
       actions: 'Conectar com 5 pessoas do LinkedIn',
