@@ -24,7 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </div>
           </header>
-          <main className="flex-1 p-6 lg:p-8">
+          <main className="flex-1 p-6 lg:p-8 bg-background transition-colors duration-300">
             <div className="max-w-7xl mx-auto">
               {children}
             </div>

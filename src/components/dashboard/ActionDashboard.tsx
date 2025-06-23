@@ -20,11 +20,11 @@ export const ActionDashboard: React.FC = () => {
             <Target className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-gray-900">Dashboard de Produtividade</h1>
-            <p className="text-gray-600 mt-1">Seu centro de comando para mentoria orientada por ações</p>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Dashboard de Produtividade</h1>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">Seu centro de comando para mentoria orientada por ações</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-xl">
+        <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-4 py-2 rounded-xl">
           <Zap className="w-5 h-5" />
           <span className="font-semibold">Modo Foco Ativo</span>
         </div>

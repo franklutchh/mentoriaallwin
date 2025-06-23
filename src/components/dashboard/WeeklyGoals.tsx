@@ -1,69 +1,50 @@
 
 import React from 'react';
-import { WeeklyGoal } from '../../types/productivity';
-import { Target, TrendingUp, Calendar } from 'lucide-react';
+import { Target, TrendingUp } from 'lucide-react';
+import { Goal } from '../../types/productivity';
 
 interface WeeklyGoalsProps {
-  goals: WeeklyGoal[];
+  goals: Goal[];
 }
 
 export const WeeklyGoals: React.FC<WeeklyGoalsProps> = ({ goals }) => {
-  const getProgressColor = (progress: number) => {
-    if (progress >= 90) return 'bg-green-500';
-    if (progress >= 70) return 'bg-yellow-500';
-    if (progress >= 50) return 'bg-orange-500';
-    return 'bg-red-500';
-  };
-
-  const getProgressBg = (progress: number) => {
-    if (progress >= 90) return 'bg-green-50';
-    if (progress >= 70) return 'bg-yellow-50';
-    if (progress >= 50) return 'bg-orange-50';
-    return 'bg-red-50';
-  };
-
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition-colors duration-300">
       <div className="flex items-center gap-3 mb-6">
-        <Target className="w-6 h-6 text-purple-600" />
-        <h2 className="text-xl font-bold text-gray-900">Metas Semanais</h2>
+        <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+          <Target className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Metas Semanais</h2>
       </div>
-
-      <div className="space-y-6">
+      
+      <div className="space-y-4">
         {goals.map((goal) => (
-          <div key={goal.id} className={`p-4 rounded-lg ${getProgressBg(goal.progress)}`}>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-900">{goal.title}</h3>
-              <span className="text-sm text-gray-600">
+          <div key={goal.id} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-gray-900 dark:text-white">{goal.title}</h3>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
                 {goal.current}/{goal.target} {goal.unit}
               </span>
             </div>
             
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
               <div
-                className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(goal.progress)}`}
-                style={{ width: `${Math.min(goal.progress, 100)}%` }}
+                className="bg-gradient-to-r from-purple-500 to-purple-600 h-2.5 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
               ></div>
             </div>
-
+            
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1 text-gray-600">
+              <span className="text-gray-600 dark:text-gray-400">{goal.description}</span>
+              <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                 <TrendingUp className="w-4 h-4" />
-                <span>{Math.round(goal.progress)}% concluído</span>
-              </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <Calendar className="w-4 h-4" />
-                <span>
-                  {Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000))} dias restantes
-                </span>
+                <span>{Math.round((goal.current / goal.target) * 100)}% concluído</span>
               </div>
             </div>
-
-            {goal.progress >= 100 && (
-              <div className="mt-2 text-sm text-green-700 font-medium">
-                🎉 Meta alcançada!
-              </div>
-            )}
+            
+            <div className="text-xs text-gray-500 dark:text-gray-500">
+              {goal.daysLeft} dias restantes
+            </div>
           </div>
         ))}
       </div>
