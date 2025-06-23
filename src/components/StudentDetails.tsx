@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
+import { Student, Mentoring, ActionItem, FollowUpItem, Call } from '../types/student';
 import { OverviewTab } from './student-details/OverviewTab';
 import { MentoringTab } from './student-details/MentoringTab';
 import { ActionPlanTab } from './student-details/ActionPlanTab';
@@ -10,10 +11,13 @@ import { StudentHeader } from './student-details/StudentHeader';
 import { StudentTabs } from './student-details/StudentTabs';
 import { ReportTab } from './student-details/ReportTab';
 import { NotesTab } from './student-details/NotesTab';
+import { CallsTab } from './student-details/CallsTab';
+import { useCallsContext } from '../contexts/CallsContext';
 
 export const StudentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<'resumo' | 'mentorias' | 'plano' | 'follow-up' | 'relatorio' | 'notas'>('resumo');
+  const { getStudentCalls } = useCallsContext();
+  const [activeTab, setActiveTab] = useState<'resumo' | 'calls' | 'plano' | 'follow-up' | 'relatorio' | 'notas'>('resumo');
 
   // Mock data expandido
   const student: Student = {
@@ -82,13 +86,16 @@ export const StudentDetails: React.FC = () => {
 - Melhoria significativa na comunicação
 - Maior proatividade nas ações definidas`);
 
+  // Get calls for this student
+  const calls = id ? getStudentCalls(id) : [];
+
   const exportReport = () => {
     // Logic to export comprehensive report
     console.log('Exportando relatório completo...');
   };
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab as 'resumo' | 'mentorias' | 'plano' | 'follow-up' | 'relatorio' | 'notas');
+    setActiveTab(tab as 'resumo' | 'calls' | 'plano' | 'follow-up' | 'relatorio' | 'notas');
   };
 
   return (
@@ -108,8 +115,8 @@ export const StudentDetails: React.FC = () => {
         <OverviewTab student={student} mentorias={mentorias} />
       )}
 
-      {activeTab === 'mentorias' && (
-        <MentoringTab mentorias={mentorias} />
+      {activeTab === 'calls' && (
+        <CallsTab calls={calls} />
       )}
 
       {activeTab === 'plano' && (
