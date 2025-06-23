@@ -126,7 +126,7 @@ export const Dashboard: React.FC = () => {
             <Clock className="w-5 h-5 text-red-500" />
           </div>
           <p className="text-3xl font-bold text-red-600">{studentsWithDelayedTasks}</p>
-          <p className="text-sm text-gray-600 mt-1">Alunos com < 70% conclusão</p>
+          <p className="text-sm text-gray-600 mt-1">Alunos com &lt; 70% conclusão</p>
         </div>
       </div>
 
