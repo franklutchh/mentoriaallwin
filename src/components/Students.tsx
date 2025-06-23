@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Plus, Calendar, Eye, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useMentoringContext } from '../contexts/MentoringContext';
+import { useMentoringContext } from '../contexts/useMentoringContext';
 import { StudentCard } from './StudentCard';
 import { AdvancedFilters } from './dashboard/AdvancedFilters';
 
