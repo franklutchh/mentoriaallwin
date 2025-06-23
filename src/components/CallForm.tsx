@@ -19,7 +19,7 @@ export const CallForm: React.FC = () => {
     type: '1:1' as '1:1' | 'grupo',
     topics: '',
     actions: '',
-    status: 'agendada' as 'agendada' | 'completa' | 'em-andamento' | 'precisa-revisao',
+    status: 'completa' as 'completa' | 'em-andamento' | 'precisa-revisao',
     recordingUrl: '',
     sessionLink: ''
   });
@@ -37,6 +37,24 @@ export const CallForm: React.FC = () => {
     } else {
       setSelectedStudents(prev => prev.filter(id => id !== studentId));
     }
+  };
+
+  const handleTagAdd = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags(prev => [...prev, tag]);
+    }
+  };
+
+  const handleTagRemove = (tag: string) => {
+    setTags(prev => prev.filter(t => t !== tag));
+  };
+
+  const isFormValid = () => {
+    return formData.date && 
+           formData.time && 
+           formData.topics.trim() && 
+           formData.actions.trim() && 
+           selectedStudents.length > 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -93,26 +111,30 @@ export const CallForm: React.FC = () => {
           <div className="bg-card/60 backdrop-blur-xl rounded-2xl shadow-apple-lg border border-border/50 p-8">
             <CallFormFields 
               formData={formData} 
-              onInputChange={handleInputChange} 
+              onChange={handleInputChange} 
             />
           </div>
 
           <div className="bg-card/60 backdrop-blur-xl rounded-2xl shadow-apple-lg border border-border/50 p-8">
             <StudentSelection 
               students={students}
-              selectedStudents={selectedStudents}
+              selectedStudentIds={selectedStudents}
               onStudentChange={handleStudentChange}
             />
           </div>
 
           <div className="bg-card/60 backdrop-blur-xl rounded-2xl shadow-apple-lg border border-border/50 p-8">
             <TagSelector 
-              tags={tags} 
-              onTagsChange={setTags} 
+              selectedTags={tags}
+              onTagAdd={handleTagAdd}
+              onTagRemove={handleTagRemove}
             />
           </div>
 
-          <FormActions onCancel={() => navigate('/calls')} />
+          <FormActions 
+            onCancel={() => navigate('/calls')} 
+            isFormValid={isFormValid()}
+          />
         </form>
       </div>
     </div>
