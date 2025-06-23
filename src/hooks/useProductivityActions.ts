@@ -22,10 +22,10 @@ export const useProductivityActions = () => {
       if (!lastCall || new Date(lastCall.date) < tenDaysAgo) {
         priorities.push({
           id: `no-call-${student.id}`,
-          title: `Schedule call with ${student.name}`,
+          title: `Agendar call com ${student.name}`,
           description: lastCall 
-            ? `Last call was ${Math.floor((today.getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000))} days ago`
-            : 'No calls recorded yet',
+            ? `Última call foi há ${Math.floor((today.getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000))} dias`
+            : 'Nenhuma call registrada ainda',
           type: 'call',
           studentId: student.id,
           studentName: student.name,
@@ -44,8 +44,8 @@ export const useProductivityActions = () => {
       if (progressPercentage < 50) {
         priorities.push({
           id: `low-progress-${student.id}`,
-          title: `Review progress with ${student.name}`,
-          description: `Only ${Math.round(progressPercentage)}% tasks completed`,
+          title: `Revisar progresso com ${student.name}`,
+          description: `Apenas ${Math.round(progressPercentage)}% das tarefas concluídas`,
           type: 'review',
           studentId: student.id,
           studentName: student.name,
@@ -67,8 +67,8 @@ export const useProductivityActions = () => {
           if (student) {
             priorities.push({
               id: `follow-up-${call.id}`,
-              title: `Follow up on ${student.name}'s call`,
-              description: `Check progress on: ${call.actions}`,
+              title: `Follow-up da call com ${student.name}`,
+              description: `Verificar progresso em: ${call.actions}`,
               type: 'follow-up',
               studentId: student.id,
               studentName: student.name,
@@ -104,15 +104,15 @@ export const useProductivityActions = () => {
       if (!lastCall) {
         alerts.push({
           id: `critical-${student.id}`,
-          title: 'Student Without Any Calls',
-          message: `${student.name} has no recorded calls yet`,
+          title: 'Aluno Sem Nenhuma Call',
+          message: `${student.name} não possui nenhuma call registrada ainda`,
           type: 'error',
           studentId: student.id,
           actionRequired: true,
           quickActions: [
             {
               id: 'schedule-call',
-              label: 'Schedule Call',
+              label: 'Agendar Call',
               icon: 'Calendar',
               action: () => window.location.href = `/calls/new?studentId=${student.id}`
             }
@@ -123,8 +123,8 @@ export const useProductivityActions = () => {
         if (daysSinceCall > 14) {
           alerts.push({
             id: `overdue-${student.id}`,
-            title: 'Overdue Student Contact',
-            message: `${student.name} hasn't had a call in ${daysSinceCall} days`,
+            title: 'Contato em Atraso com Aluno',
+            message: `${student.name} não tem call há ${daysSinceCall} dias`,
             type: 'warning',
             studentId: student.id,
             actionRequired: true,
@@ -132,7 +132,7 @@ export const useProductivityActions = () => {
             quickActions: [
               {
                 id: 'urgent-call',
-                label: 'Schedule Urgent Call',
+                label: 'Agendar Call Urgente',
                 icon: 'Phone',
                 action: () => window.location.href = `/calls/new?studentId=${student.id}&urgent=true`
               }
@@ -158,7 +158,7 @@ export const useProductivityActions = () => {
     return [
       {
         id: 'weekly-calls',
-        title: 'Weekly Calls',
+        title: 'Calls Semanais',
         target: 15,
         current: weekCalls.length,
         unit: 'calls',
@@ -167,7 +167,7 @@ export const useProductivityActions = () => {
       },
       {
         id: 'follow-ups',
-        title: 'Follow-ups Completed',
+        title: 'Follow-ups Completos',
         target: 10,
         current: 7, // This would be calculated from actual follow-up data
         unit: 'follow-ups',
@@ -176,10 +176,10 @@ export const useProductivityActions = () => {
       },
       {
         id: 'student-progress',
-        title: 'Students on Track',
+        title: 'Alunos no Caminho Certo',
         target: students.filter(s => s.status === 'ativo').length,
         current: students.filter(s => s.status === 'ativo' && (s.tasksCompleted! / s.totalTasks!) > 0.7).length,
-        unit: 'students',
+        unit: 'alunos',
         deadline: endOfWeek.toISOString(),
         progress: Math.round((students.filter(s => s.status === 'ativo' && (s.tasksCompleted! / s.totalTasks!) > 0.7).length / students.filter(s => s.status === 'ativo').length) * 100)
       }
