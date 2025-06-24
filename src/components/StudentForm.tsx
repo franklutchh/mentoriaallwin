@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Save, Plus, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Student } from '../types/student';
 import { useMentoringContext } from '../contexts/MentoringContext';
 import { useToast } from '@/hooks/use-toast';
 
