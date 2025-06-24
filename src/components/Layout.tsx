@@ -14,7 +14,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="min-h-screen flex w-full bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300">
         <AppSidebar />
         <SidebarInset className="flex-1">
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl px-6">
+          <header className="flex h-12 shrink-0 items-center gap-2 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl px-4">
             <div className="flex-1" />
             <div className="flex items-center gap-3">
               <ThemeToggle />
@@ -23,8 +23,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </div>
           </header>
-          <main className="flex-1 p-6 lg:p-8 bg-gray-50/50 dark:bg-gray-900/50 transition-colors duration-300">
-            <div className="max-w-7xl mx-auto">
+          <main className="flex-1 p-4 bg-gray-50/50 dark:bg-gray-900/50 transition-colors duration-300">
+            <div className="max-w-full mx-auto">
               {children}
             </div>
           </main>
