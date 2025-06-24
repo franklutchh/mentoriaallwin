@@ -1,92 +1,65 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
-import { useMentoringOperations } from '../hooks/useMentoringOperations';
-import { getDaysRemaining, getWeeklyPriorities } from '../utils/mentoringUtils';
+import { Student, Mentoring, Call, ActionItem, FollowUpItem } from '../types/student';
+import { useSupabaseData } from '@/hooks/useSupabaseData';
 
-interface MentoringContextData {
+interface MentoringContextType {
   students: Student[];
   mentorias: Mentoring[];
-  addStudent: (student: Student) => void;
-  updateStudent: (id: string, updates: Partial<Student>) => void;
-  addMentoring: (mentoring: Mentoring) => void;
-  updateMentoring: (id: string, updates: Partial<Mentoring>) => void;
-  addActionItem: (studentId: string, item: ActionItem) => void;
-  updateActionItem: (studentId: string, itemId: string, updates: Partial<ActionItem>) => void;
-  addFollowUpItem: (studentId: string, item: FollowUpItem) => void;
-  updateFollowUpItem: (studentId: string, itemId: string, updates: Partial<FollowUpItem>) => void;
-  getStudentMentorias: (studentId: string) => Mentoring[];
-  getStudentActions: (studentId: string) => ActionItem[];
-  getStudentFollowUps: (studentId: string) => FollowUpItem[];
+  actionItems: ActionItem[];
+  followUpItems: FollowUpItem[];
+  loading: boolean;
+  addStudent: (student: Omit<Student, 'id'>) => Promise<void>;
   getDaysRemaining: (studentId: string) => number;
-  getWeeklyPriorities: () => {
-    lowProgress: Student[];
-    noRecentSession: Student[];
-    lastMonth: Student[];
+  getStudentMentorias: (studentId: string) => Mentoring[];
+  refetch: {
+    students: () => Promise<void>;
+    mentorias: () => Promise<void>;
+    actionItems: () => Promise<void>;
+    followUpItems: () => Promise<void>;
   };
 }
 
-const MentoringContext = createContext<MentoringContextData | undefined>(undefined);
+const MentoringContext = createContext<MentoringContextType | undefined>(undefined);
 
-interface MentoringProviderProps {
-  children: ReactNode;
-}
-
-export const MentoringProvider: React.FC<MentoringProviderProps> = ({ children }) => {
+export const MentoringProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const {
     students,
     mentorias,
     actionItems,
     followUpItems,
+    loading,
     addStudent,
-    updateStudent,
-    addMentoring,
-    updateMentoring,
-    addActionItem,
-    updateActionItem,
-    addFollowUpItem,
-    updateFollowUpItem
-  } = useMentoringOperations();
+    refetch,
+  } = useSupabaseData();
 
-  const getStudentMentorias = (studentId: string) => {
-    return mentorias.filter(m => m.studentId === studentId);
-  };
-
-  const getStudentActions = (studentId: string) => {
-    return actionItems[studentId] || [];
-  };
-
-  const getStudentFollowUps = (studentId: string) => {
-    return followUpItems[studentId] || [];
-  };
-
-  const getStudentDaysRemaining = (studentId: string) => {
+  const getDaysRemaining = (studentId: string): number => {
     const student = students.find(s => s.id === studentId);
-    if (!student) return 0;
-    return getDaysRemaining(student);
+    if (!student || !student.dueDate) return 0;
+    
+    const dueDate = new Date(student.dueDate);
+    const today = new Date();
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return Math.max(0, diffDays);
   };
 
-  const getStudentWeeklyPriorities = () => {
-    return getWeeklyPriorities(students, mentorias);
+  const getStudentMentorias = (studentId: string): Mentoring[] => {
+    return mentorias.filter(mentoria => mentoria.studentId === studentId);
   };
 
   return (
     <MentoringContext.Provider value={{
       students,
       mentorias,
+      actionItems,
+      followUpItems,
+      loading,
       addStudent,
-      updateStudent,
-      addMentoring,
-      updateMentoring,
-      addActionItem,
-      updateActionItem,
-      addFollowUpItem,
-      updateFollowUpItem,
+      getDaysRemaining,
       getStudentMentorias,
-      getStudentActions,
-      getStudentFollowUps,
-      getDaysRemaining: getStudentDaysRemaining,
-      getWeeklyPriorities: getStudentWeeklyPriorities
+      refetch,
     }}>
       {children}
     </MentoringContext.Provider>

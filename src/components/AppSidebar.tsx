@@ -1,106 +1,137 @@
 
 import React from 'react';
-import { Home, Users, Calendar, BookOpen, Phone } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Home, Users, Calendar, Phone, Target, BookOpen, LogOut } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+  SidebarHeader,
+  SidebarFooter,
+} from "@/components/ui/sidebar";
 
-export const AppSidebar: React.FC = () => {
-  const navigate = useNavigate();
+const navigationItems = [
+  {
+    title: "Dashboard",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Alunos",
+    url: "/students",
+    icon: Users,
+  },
+  {
+    title: "Calendário",
+    url: "/calendar",
+    icon: Calendar,
+  },
+  {
+    title: "Calls",
+    url: "/calls",
+    icon: Phone,
+  },
+  {
+    title: "Prioridades",
+    url: "/priorities",  
+    icon: Target,
+  },
+  {
+    title: "Base de Conhecimento",
+    url: "/knowledge",
+    icon: BookOpen,
+  },
+];
+
+export function AppSidebar() {
   const location = useLocation();
+  const { signOut, user } = useAuth();
+  const { toast } = useToast();
 
-  const menuItems = [
-    { icon: Home, label: 'Dashboard', path: '/' },
-    { icon: Users, label: 'Alunos', path: '/students' },
-    { icon: Phone, label: 'Chamadas', path: '/calls' },
-    { icon: Calendar, label: 'Agenda', path: '/calendar' },
-    { icon: BookOpen, label: 'Biblioteca', path: '/knowledge' },
-  ];
-
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Logout realizado com sucesso!",
+        description: "Até a próxima!",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível fazer logout.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <Sidebar className="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 backdrop-blur-xl transition-colors duration-300">
-      <SidebarHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
+    <Sidebar>
+      <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-xl">A</span>
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">M</span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">All Win</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">Sistema de Mentoria</p>
+            <h2 className="font-bold text-lg">Mentoria</h2>
+            <p className="text-xs text-muted-foreground">Sistema de Gestão</p>
           </div>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-4">
+      <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-4 px-2">
-            Navegação
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
+            <SidebarMenu>
+              {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    onClick={() => navigate(item.path)}
-                    isActive={isActive(item.path)}
-                    className={`
-                      w-full justify-start px-4 py-3 rounded-xl font-medium transition-all duration-200
-                      ${isActive(item.path) 
-                        ? 'bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900/40 dark:to-purple-800/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-600 shadow-sm' 
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 hover:scale-[1.02] hover:shadow-sm'
-                      }
-                    `}
+                    asChild
+                    isActive={location.pathname === item.url}
                   >
-                    <item.icon className={`w-5 h-5 mr-4 ${isActive(item.path) ? 'text-purple-600 dark:text-purple-300' : 'text-gray-600 dark:text-gray-300'}`} />
-                    <span className="text-base">{item.label}</span>
+                    <Link to={item.url}>
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <div className="bg-gradient-to-br from-purple-50 via-purple-25 to-indigo-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-700 rounded-2xl p-5 border border-purple-100 dark:border-gray-600 shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 rounded-lg bg-purple-500 flex items-center justify-center">
-                <span className="text-white text-xs font-bold">📊</span>
-              </div>
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Estatísticas Rápidas</h3>
+      </SidebarContent>
+
+      <SidebarFooter className="p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-gray-600">
+                {user?.email?.charAt(0).toUpperCase()}
+              </span>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-white/60 dark:bg-gray-700/60 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Calls Hoje</span>
-                </div>
-                <span className="text-lg font-bold text-purple-600 dark:text-purple-300">5</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-white/60 dark:bg-gray-700/60 rounded-xl backdrop-blur-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-blue-400"></div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Alunos Ativos</span>
-                </div>
-                <span className="text-lg font-bold text-purple-600 dark:text-purple-300">24</span>
-              </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user?.user_metadata?.name || user?.email}
+              </p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
           </div>
+          <button
+            onClick={handleSignOut}
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            title="Sair"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
-      </SidebarContent>
+      </SidebarFooter>
     </Sidebar>
   );
-};
+}
