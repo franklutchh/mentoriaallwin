@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from './AppSidebar';
 import { ThemeToggle } from './ui/theme-toggle';
 
@@ -10,12 +10,11 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300">
         <AppSidebar />
         <SidebarInset className="flex-1">
           <header className="flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl px-6">
-            <SidebarTrigger className="-ml-1 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 transition-all duration-200 rounded-lg p-2 text-gray-600 dark:text-gray-300" />
             <div className="flex-1" />
             <div className="flex items-center gap-3">
               <ThemeToggle />

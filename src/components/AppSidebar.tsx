@@ -72,7 +72,12 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar 
+      collapsible="offcanvas" 
+      className="group-hover:translate-x-0 -translate-x-full hover:translate-x-0 transition-transform duration-300 ease-in-out z-50"
+    >
+      <div className="absolute -right-1 top-1/2 w-1 h-20 bg-gradient-to-b from-transparent via-gray-300/50 to-transparent rounded-r-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+      
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
