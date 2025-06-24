@@ -1,4 +1,3 @@
-
 import { Student, Mentoring, ActionItem, FollowUpItem } from '../types/student';
 
 export const mockStudents: Student[] = [
@@ -12,7 +11,40 @@ export const mockStudents: Student[] = [
     group: 'Turma A',
     tags: ['trafego', 'copy'],
     tasksCompleted: 8,
-    totalTasks: 12
+    totalTasks: 12,
+    favorite: true,
+    
+    // Dados Financeiros
+    paymentStatus: 'em-dia',
+    monthlyValue: 497,
+    dueDate: '2024-02-15',
+    lastPaymentDate: '2024-01-15',
+    paymentHistory: [
+      {
+        id: '1',
+        amount: 497,
+        date: '2024-01-15',
+        status: 'pago',
+        method: 'PIX'
+      }
+    ],
+    
+    // Gamificação
+    level: 'intermediario',
+    points: 850,
+    badges: [
+      {
+        id: '1',
+        name: 'Primeira Call',
+        description: 'Completou a primeira call de mentoria',
+        icon: '🎯',
+        earnedDate: '2024-01-16',
+        category: 'milestone'
+      }
+    ],
+    engagementScore: 85,
+    churnRisk: 'baixo',
+    lifetimeValue: 2485
   },
   {
     id: '2',
@@ -24,7 +56,31 @@ export const mockStudents: Student[] = [
     group: 'Turma A',
     tags: ['mentalidade', 'funil'],
     tasksCompleted: 3,
-    totalTasks: 10
+    totalTasks: 10,
+    favorite: false,
+    
+    // Dados Financeiros
+    paymentStatus: 'atrasado',
+    monthlyValue: 497,
+    dueDate: '2024-02-10',
+    lastPaymentDate: '2024-01-10',
+    paymentHistory: [
+      {
+        id: '2',
+        amount: 497,
+        date: '2024-01-10',
+        status: 'pago',
+        method: 'Cartão'
+      }
+    ],
+    
+    // Gamificação
+    level: 'iniciante',
+    points: 320,
+    badges: [],
+    engagementScore: 45,
+    churnRisk: 'alto',
+    lifetimeValue: 997
   },
   {
     id: '3',
@@ -36,7 +92,47 @@ export const mockStudents: Student[] = [
     group: 'Turma B',
     tags: ['copy'],
     tasksCompleted: 15,
-    totalTasks: 15
+    totalTasks: 15,
+    favorite: false,
+    
+    // Dados Financeiros
+    paymentStatus: 'em-dia',
+    monthlyValue: 497,
+    dueDate: '2024-02-01',
+    lastPaymentDate: '2024-01-01',
+    paymentHistory: [
+      {
+        id: '3',
+        amount: 497,
+        date: '2024-01-01',
+        status: 'pago',
+        method: 'PIX'
+      },
+      {
+        id: '4',
+        amount: 497,
+        date: '2023-12-01',
+        status: 'pago',
+        method: 'PIX'
+      }
+    ],
+    
+    // Gamificação
+    level: 'avancado',
+    points: 1250,
+    badges: [
+      {
+        id: '2',
+        name: 'Dedicado',
+        description: 'Completou todas as tarefas',
+        icon: '🏆',
+        earnedDate: '2024-01-20',
+        category: 'progresso'
+      }
+    ],
+    engagementScore: 95,
+    churnRisk: 'baixo',
+    lifetimeValue: 3482
   }
 ];
 

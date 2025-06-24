@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Student, Mentoring, ActionItem, FollowUpItem, Call } from '../types/student';
@@ -19,7 +18,7 @@ export const StudentDetails: React.FC = () => {
   const { getStudentCalls } = useCallsContext();
   const [activeTab, setActiveTab] = useState<'resumo' | 'calls' | 'plano' | 'follow-up' | 'relatorio' | 'notas'>('resumo');
 
-  // Mock data expandido
+  // Mock data expandido com todos os campos obrigatórios
   const student: Student = {
     id: '1',
     name: 'Ana Silva',
@@ -30,7 +29,40 @@ export const StudentDetails: React.FC = () => {
     group: 'Turma A',
     tags: ['trafego', 'copy'],
     tasksCompleted: 8,
-    totalTasks: 12
+    totalTasks: 12,
+    favorite: true,
+    
+    // Dados Financeiros
+    paymentStatus: 'em-dia',
+    monthlyValue: 497,
+    dueDate: '2024-02-15',
+    lastPaymentDate: '2024-01-15',
+    paymentHistory: [
+      {
+        id: '1',
+        amount: 497,
+        date: '2024-01-15',
+        status: 'pago',
+        method: 'PIX'
+      }
+    ],
+    
+    // Gamificação
+    level: 'intermediario',
+    points: 850,
+    badges: [
+      {
+        id: '1',
+        name: 'Primeira Call',
+        description: 'Completou a primeira call de mentoria',
+        icon: '🎯',
+        earnedDate: '2024-01-16',
+        category: 'milestone'
+      }
+    ],
+    engagementScore: 85,
+    churnRisk: 'baixo',
+    lifetimeValue: 2485
   };
 
   const [mentorias] = useState<Mentoring[]>([

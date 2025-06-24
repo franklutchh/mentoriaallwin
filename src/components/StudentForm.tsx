@@ -27,10 +27,25 @@ export const StudentForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const studentData = {
+    const studentData: Student = {
       id: Date.now().toString(),
       ...formData,
-      instagram: formData.instagram.startsWith('@') ? formData.instagram : `@${formData.instagram}`
+      instagram: formData.instagram.startsWith('@') ? formData.instagram : `@${formData.instagram}`,
+      
+      // Dados Financeiros - valores padrão
+      paymentStatus: 'em-dia',
+      monthlyValue: 497,
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 dias a partir de hoje
+      lastPaymentDate: new Date().toISOString().split('T')[0],
+      paymentHistory: [],
+      
+      // Gamificação - valores iniciais
+      level: 'iniciante',
+      points: 0,
+      badges: [],
+      engagementScore: 50,
+      churnRisk: 'medio',
+      lifetimeValue: 0
     };
 
     addStudent(studentData);
