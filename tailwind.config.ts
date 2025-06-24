@@ -67,14 +67,14 @@ export default {
 					foreground: '#FFFFFF'
 				},
 				sidebar: {
-					DEFAULT: 'rgba(255, 255, 255, 0.8)',
-					foreground: '#191332',
-					primary: '#9B90F9',
-					'primary-foreground': '#191332',
-					accent: 'rgba(155, 144, 249, 0.1)',
-					'accent-foreground': '#191332',
-					border: 'rgba(229, 231, 235, 0.6)',
-					ring: '#9B90F9'
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
 				}
 			},
 			borderRadius: {
