@@ -1,5 +1,4 @@
 
-
 export interface Student {
   id: string;
   name: string;
@@ -13,6 +12,38 @@ export interface Student {
   tasksCompleted?: number;
   totalTasks?: number;
   favorite?: boolean;
+  
+  // Dados Financeiros
+  paymentStatus: 'em-dia' | 'pendente' | 'atrasado' | 'inadimplente';
+  monthlyValue: number;
+  dueDate: string;
+  lastPaymentDate?: string;
+  paymentHistory: PaymentRecord[];
+  
+  // Gamificação
+  level: 'iniciante' | 'intermediario' | 'avancado' | 'expert';
+  points: number;
+  badges: Badge[];
+  engagementScore: number;
+  churnRisk: 'baixo' | 'medio' | 'alto';
+  lifetimeValue: number;
+}
+
+export interface PaymentRecord {
+  id: string;
+  amount: number;
+  date: string;
+  status: 'pago' | 'pendente' | 'atrasado';
+  method?: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earnedDate: string;
+  category: 'progresso' | 'engagement' | 'pagamento' | 'milestone';
 }
 
 export interface Call {
@@ -27,6 +58,8 @@ export interface Call {
   status: 'agendada' | 'completa' | 'em-andamento' | 'precisa-revisao';
   tags: string[];
   sessionLink?: string;
+  satisfactionScore?: number;
+  followUpRequired?: boolean;
 }
 
 export interface Mentoring {
@@ -41,6 +74,8 @@ export interface Mentoring {
   status: 'agendada' | 'completa' | 'em-andamento' | 'precisa-revisao';
   tags: string[];
   sessionLink?: string;
+  satisfactionScore?: number;
+  followUpRequired?: boolean;
 }
 
 export interface ActionItem {
@@ -50,6 +85,7 @@ export interface ActionItem {
   dueDate?: string;
   priority: 'baixa' | 'media' | 'alta';
   createdAt?: string;
+  points?: number;
 }
 
 export interface FollowUpItem {
@@ -57,11 +93,22 @@ export interface FollowUpItem {
   description: string;
   completed: boolean;
   createdAt: string;
+  priority?: 'baixa' | 'media' | 'alta';
 }
 
 export interface WeeklyPriorities {
   lowProgress: Student[];
   noRecentSession: Student[];
   lastMonth: Student[];
+  paymentIssues: Student[];
+  highChurnRisk: Student[];
 }
 
+export interface FinancialMetrics {
+  totalRevenue: number;
+  monthlyRevenue: number;
+  averageTicket: number;
+  churnRate: number;
+  paymentDelayRate: number;
+  lifetimeValue: number;
+}
