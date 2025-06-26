@@ -130,47 +130,4 @@
     background-color: hsl(var(--sidebar-primary));
     color: hsl(var(--sidebar-primary-foreground));
   }
-
-  /* Sidebar auto-hide hover area */
-  [data-sidebar="sidebar"][data-collapsible="offcanvas"] {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 50;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-  }
-
-  /* Área de hover invisível para ativar a sidebar */
-  [data-sidebar="sidebar"][data-collapsible="offcanvas"]::before {
-    content: '';
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 20px;
-    height: 100vh;
-    z-index: 49;
-    background: transparent;
-  }
-
-  /* Mostrar sidebar no hover */
-  [data-sidebar="sidebar"][data-collapsible="offcanvas"]:hover,
-  [data-sidebar="sidebar"][data-collapsible="offcanvas"]:focus-within {
-    transform: translateX(0);
-  }
-
-  /* Área de hover expandida */
-  .sidebar-hover-area {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 30px;
-    height: 100vh;
-    z-index: 48;
-    background: transparent;
-  }
-
-  .sidebar-hover-area:hover + [data-sidebar="sidebar"][data-collapsible="offcanvas"] {
-    transform: translateX(0);
-  }
 }
