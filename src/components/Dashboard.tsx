@@ -1,11 +1,91 @@
 
 import React from 'react';
 import { ActionDashboard } from './dashboard/ActionDashboard';
+import { ProductivityCards } from './dashboard/ProductivityCards';
+import { FinancialMetricsComponent } from './dashboard/FinancialMetrics';
+import { GamificationDashboard } from './dashboard/GamificationDashboard';
+import { useMentoringContext } from '../contexts/MentoringContext';
+import { FinancialMetrics } from '../types/student';
 
 export const Dashboard: React.FC = () => {
+  const { students, mentorias, loading } = useMentoringContext();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Calcular métricas reais
+  const activeStudents = students.filter(s => s.status === 'ativo').length;
+  const totalStudents = students.length;
+  const totalSessions = mentorias.length;
+  const completedSessions = mentorias.filter(m => m.status === 'completa').length;
+  const pendingStudents = students.filter(s => s.status === 'com-pendencia').length;
+  const studentsWithDelayedTasks = students.filter(s => {
+    if (!s.totalTasks) return false;
+    const progressPercentage = (s.tasksCompleted! / s.totalTasks) * 100;
+    return progressPercentage < 70;
+  }).length;
+
+  // Sessões da semana atual
+  const now = new Date();
+  const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+  const weekSessions = mentorias.filter(m => {
+    const sessionDate = new Date(m.date);
+    return sessionDate >= startOfWeek;
+  }).length;
+
+  const pendingSessions = mentorias.filter(m => 
+    m.status === 'agendada' || m.status === 'em-andamento'
+  ).length;
+
+  // Métricas financeiras reais
+  const financialMetrics: FinancialMetrics = {
+    totalRevenue: students.reduce((sum, student) => sum + (student.lifetimeValue || 0), 0),
+    monthlyRevenue: students
+      .filter(s => s.status === 'ativo')
+      .reduce((sum, student) => sum + student.monthlyValue, 0),
+    averageTicket: activeStudents > 0 ? 
+      students
+        .filter(s => s.status === 'ativo')
+        .reduce((sum, student) => sum + student.monthlyValue, 0) / activeStudents : 0,
+    churnRate: totalStudents > 0 ? 
+      (students.filter(s => s.status === 'finalizado').length / totalStudents) * 100 : 0,
+    paymentDelayRate: activeStudents > 0 ? 
+      (students.filter(s => s.paymentStatus !== 'em-dia' && s.status === 'ativo').length / activeStudents) * 100 : 0,
+    lifetimeValue: students.length > 0 ? 
+      students.reduce((sum, student) => sum + (student.lifetimeValue || 0), 0) / students.length : 0
+  };
+
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 space-y-8">
       <div className="max-w-full mx-auto">
+        {/* Cards de Produtividade */}
+        <ProductivityCards
+          totalStudents={totalStudents}
+          activeStudents={activeStudents}
+          totalSessions={totalSessions}
+          completedSessions={completedSessions}
+          pendingStudents={pendingStudents}
+          studentsWithDelayedTasks={studentsWithDelayedTasks}
+          weekSessions={weekSessions}
+          pendingSessions={pendingSessions}
+        />
+
+        {/* Métricas Financeiras */}
+        {activeStudents > 0 && (
+          <FinancialMetricsComponent metrics={financialMetrics} />
+        )}
+
+        {/* Dashboard de Gamificação */}
+        {students.length > 0 && (
+          <GamificationDashboard students={students} />
+        )}
+
+        {/* Dashboard de Ações */}
         <ActionDashboard />
       </div>
     </div>
