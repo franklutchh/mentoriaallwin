@@ -81,38 +81,58 @@ export const useProductivityActions = () => {
     });
   }
 
+  // Se não há alertas reais, mostrar estado vazio
+  if (smartAlerts.length === 0 && students.length === 0) {
+    smartAlerts.push({
+      id: 'no-data',
+      type: 'missing-followup',
+      severity: 'baixa',
+      title: 'Sistema Pronto',
+      message: 'Adicione seus primeiros alunos para começar a usar o sistema',
+      details: 'Vá para a seção Alunos e cadastre seu primeiro aluno'
+    });
+  }
+
   // Metas semanais baseadas em dados reais
+  const currentWeekSessions = mentorias.filter(m => {
+    const sessionDate = new Date(m.date);
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    return sessionDate >= startOfWeek;
+  }).length;
+
   const weeklyGoals: Goal[] = [
     {
       id: 'weekly-sessions',
       title: 'Sessões Semanais',
       description: 'Meta de sessões para esta semana',
-      current: mentorias.filter(m => {
-        const sessionDate = new Date(m.date);
-        const startOfWeek = new Date();
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-        return sessionDate >= startOfWeek;
-      }).length,
-      target: Math.max(students.filter(s => s.status === 'ativo').length, 10),
+      current: currentWeekSessions,
+      target: Math.max(students.filter(s => s.status === 'ativo').length * 2, 5),
       unit: 'sessões',
-      daysLeft: 7 - new Date().getDay()
-    },
-    {
-      id: 'followup-completion',
-      title: 'Conclusão de Follow-ups',
-      description: 'Follow-ups concluídos esta semana',
-      current: followUpItems.filter(item => {
-        if (!item.completed) return false;
-        const createdDate = new Date(item.createdAt);
-        const startOfWeek = new Date();
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-        return createdDate >= startOfWeek;
-      }).length,
-      target: Math.max(followUpItems.length, 5),
-      unit: 'follow-ups',
       daysLeft: 7 - new Date().getDay()
     }
   ];
+
+  // Adicionar meta de follow-ups apenas se existirem
+  if (followUpItems.length > 0) {
+    const completedThisWeek = followUpItems.filter(item => {
+      if (!item.completed) return false;
+      const createdDate = new Date(item.createdAt);
+      const startOfWeek = new Date();
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+      return createdDate >= startOfWeek;
+    }).length;
+
+    weeklyGoals.push({
+      id: 'followup-completion',
+      title: 'Conclusão de Follow-ups',
+      description: 'Follow-ups concluídos esta semana',
+      current: completedThisWeek,
+      target: Math.max(followUpItems.length, 3),
+      unit: 'follow-ups',
+      daysLeft: 7 - new Date().getDay()
+    });
+  }
 
   // Métricas de produtividade baseadas em dados reais
   const productivityMetrics: ProductivityMetric[] = [
@@ -121,7 +141,7 @@ export const useProductivityActions = () => {
       type: 'students',
       label: 'Total de Alunos',
       value: students.length.toString(),
-      change: '+0%', // TODO: Calcular mudança real
+      change: '0%',
       trend: 'stable',
       period: 'Total'
     },
@@ -130,7 +150,7 @@ export const useProductivityActions = () => {
       type: 'students',
       label: 'Alunos Ativos',
       value: students.filter(s => s.status === 'ativo').length.toString(),
-      change: '+0%', // TODO: Calcular mudança real
+      change: '0%',
       trend: 'stable',
       period: 'Atual'
     },
@@ -139,7 +159,7 @@ export const useProductivityActions = () => {
       type: 'calls',
       label: 'Sessões Realizadas',
       value: mentorias.length.toString(),
-      change: '+0%', // TODO: Calcular mudança real
+      change: '0%',
       trend: 'stable',
       period: 'Total'
     }
