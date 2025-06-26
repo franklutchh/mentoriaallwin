@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Student, Mentoring, ActionItem, FollowUpItem } from '@/types/student';
@@ -96,6 +95,7 @@ export const useSupabaseData = () => {
 
       const formattedActionItems: ActionItem[] = data?.map(item => ({
         id: item.id,
+        studentId: item.student_id || undefined,
         description: item.description,
         status: item.status as ActionItem['status'],
         dueDate: item.due_date || undefined,
@@ -122,6 +122,7 @@ export const useSupabaseData = () => {
 
       const formattedFollowUpItems: FollowUpItem[] = data?.map(item => ({
         id: item.id,
+        studentId: item.student_id || undefined,
         description: item.description,
         completed: item.completed || false,
         createdAt: item.created_at,
