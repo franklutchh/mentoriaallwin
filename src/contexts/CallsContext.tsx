@@ -1,20 +1,17 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import { Student, Call, ActionItem, FollowUpItem } from '../types/student';
-import { useCallsOperations } from '../hooks/useCallsOperations';
+import { useSupabaseData } from '@/hooks/useSupabaseData';
 import { getDaysRemaining, getWeeklyPriorities } from '../utils/callsUtils';
 
 interface CallsContextData {
   students: Student[];
   calls: Call[];
-  addStudent: (student: Student) => void;
-  updateStudent: (id: string, updates: Partial<Student>) => void;
-  addCall: (call: Call) => void;
-  updateCall: (id: string, updates: Partial<Call>) => void;
-  addActionItem: (studentId: string, item: ActionItem) => void;
-  updateActionItem: (studentId: string, itemId: string, updates: Partial<ActionItem>) => void;
-  addFollowUpItem: (studentId: string, item: FollowUpItem) => void;
-  updateFollowUpItem: (studentId: string, itemId: string, updates: Partial<FollowUpItem>) => void;
+  actionItems: ActionItem[];
+  followUpItems: FollowUpItem[];
+  loading: boolean;
+  addStudent: (student: Omit<Student, 'id'>) => Promise<void>;
+  addCall: (call: Omit<Call, 'id'>) => Promise<void>;
   getStudentCalls: (studentId: string) => Call[];
   getStudentActions: (studentId: string) => ActionItem[];
   getStudentFollowUps: (studentId: string) => FollowUpItem[];
@@ -35,29 +32,24 @@ interface CallsProviderProps {
 export const CallsProvider: React.FC<CallsProviderProps> = ({ children }) => {
   const {
     students,
-    calls,
+    mentorias: calls,
     actionItems,
     followUpItems,
+    loading,
     addStudent,
-    updateStudent,
-    addCall,
-    updateCall,
-    addActionItem,
-    updateActionItem,
-    addFollowUpItem,
-    updateFollowUpItem
-  } = useCallsOperations();
+    addMentoring: addCall
+  } = useSupabaseData();
 
   const getStudentCalls = (studentId: string) => {
     return calls.filter(c => c.studentId === studentId);
   };
 
   const getStudentActions = (studentId: string) => {
-    return actionItems[studentId] || [];
+    return actionItems.filter(item => item.studentId === studentId);
   };
 
   const getStudentFollowUps = (studentId: string) => {
-    return followUpItems[studentId] || [];
+    return followUpItems.filter(item => item.studentId === studentId);
   };
 
   const getStudentDaysRemaining = (studentId: string) => {
@@ -74,14 +66,11 @@ export const CallsProvider: React.FC<CallsProviderProps> = ({ children }) => {
     <CallsContext.Provider value={{
       students,
       calls,
+      actionItems,
+      followUpItems,
+      loading,
       addStudent,
-      updateStudent,
       addCall,
-      updateCall,
-      addActionItem,
-      updateActionItem,
-      addFollowUpItem,
-      updateFollowUpItem,
       getStudentCalls,
       getStudentActions,
       getStudentFollowUps,
