@@ -81,15 +81,15 @@ export const useProductivityActions = () => {
     });
   }
 
-  // Se não há alertas reais, mostrar estado vazio
+  // Se não há alertas reais e não há alunos, mostrar estado de boas-vindas
   if (smartAlerts.length === 0 && students.length === 0) {
     smartAlerts.push({
-      id: 'no-data',
+      id: 'welcome',
       type: 'missing-followup',
       severity: 'baixa',
-      title: 'Sistema Pronto',
-      message: 'Adicione seus primeiros alunos para começar a usar o sistema',
-      details: 'Vá para a seção Alunos e cadastre seu primeiro aluno'
+      title: 'Sistema Pronto para Uso',
+      message: 'Cadastre seus primeiros alunos para começar a usar todas as funcionalidades',
+      details: 'Dashboard, métricas e alertas aparecerão automaticamente com dados reais'
     });
   }
 
