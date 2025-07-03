@@ -24,7 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </header>
         
-        <main className="flex-1 p-2 bg-gray-50/50 dark:bg-gray-900/50 transition-colors duration-300">
+        <main className="flex-1 p-1 bg-gray-50/50 dark:bg-gray-900/50 transition-colors duration-300">
           <div className="w-full">
             {children}
           </div>
