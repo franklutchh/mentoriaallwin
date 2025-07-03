@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useMentoringContext } from '../contexts/MentoringContext';
-import { Student, ActionItem, FollowUpItem } from '../types/student';
+import { Student, Mentoring, ActionItem, FollowUpItem, Call } from '../types/student';
 import { OverviewTab } from './student-details/OverviewTab';
 import { MentoringTab } from './student-details/MentoringTab';
 import { ActionPlanTab } from './student-details/ActionPlanTab';
@@ -17,66 +15,115 @@ import { useCallsContext } from '../contexts/CallsContext';
 
 export const StudentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { students, mentorias, actionItems, followUpItems, loading } = useMentoringContext();
   const { getStudentCalls } = useCallsContext();
   const [activeTab, setActiveTab] = useState<'resumo' | 'calls' | 'plano' | 'follow-up' | 'relatorio' | 'notas'>('resumo');
-  const [notes, setNotes] = useState('');
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  // Mock data expandido com todos os campos obrigatórios
+  const student: Student = {
+    id: '1',
+    name: 'Ana Silva',
+    whatsapp: '+55 11 99999-9999',
+    instagram: '@ana.silva',
+    status: 'ativo',
+    entryDate: '2024-01-15',
+    group: 'Turma A',
+    tags: ['trafego', 'copy'],
+    tasksCompleted: 8,
+    totalTasks: 12,
+    favorite: true,
+    
+    // Dados Financeiros
+    paymentStatus: 'em-dia',
+    monthlyValue: 497,
+    dueDate: '2024-02-15',
+    lastPaymentDate: '2024-01-15',
+    paymentHistory: [
+      {
+        id: '1',
+        amount: 497,
+        date: '2024-01-15',
+        status: 'pago',
+        method: 'PIX'
+      }
+    ],
+    
+    // Gamificação
+    level: 'intermediario',
+    points: 850,
+    badges: [
+      {
+        id: '1',
+        name: 'Primeira Call',
+        description: 'Completou a primeira call de mentoria',
+        icon: '🎯',
+        earnedDate: '2024-01-16',
+        category: 'milestone'
+      }
+    ],
+    engagementScore: 85,
+    churnRisk: 'baixo',
+    lifetimeValue: 2485
+  };
 
-  const student = students.find(s => s.id === id);
+  const [mentorias] = useState<Mentoring[]>([
+    {
+      id: '1',
+      studentId: '1',
+      date: '2024-01-20',
+      time: '14:00',
+      type: '1:1',
+      topics: 'Definição de objetivos, planejamento estratégico',
+      actions: 'Criar plano de ação para próximos 30 dias',
+      recordingUrl: 'https://example.com/recording1',
+      status: 'completa',
+      tags: ['planejamento', 'objetivos']
+    },
+    {
+      id: '2',
+      studentId: '1',
+      date: '2024-01-18',
+      time: '19:00',
+      type: 'grupo',
+      topics: 'Networking e relacionamentos profissionais',
+      actions: 'Conectar com 5 pessoas do LinkedIn',
+      status: 'em-andamento',
+      tags: ['networking', 'relacionamentos']
+    }
+  ]);
 
-  if (!student) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-          Aluno não encontrado
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          O aluno que você está procurando não existe ou foi removido.
-        </p>
-      </div>
-    );
-  }
+  const [actionItems, setActionItems] = useState<ActionItem[]>([
+    { id: '1', description: 'Criar plano de ação para próximos 30 dias', status: 'em-progresso', dueDate: '2024-02-01', priority: 'alta' },
+    { id: '2', description: 'Conectar com 5 pessoas do LinkedIn', status: 'concluido', priority: 'media' },
+    { id: '3', description: 'Revisar estratégia de marketing pessoal', status: 'pendente', dueDate: '2024-01-30', priority: 'alta' }
+  ]);
 
-  // Filtrar dados reais do aluno
-  const studentMentorias = mentorias.filter(m => m.studentId === id);
-  const studentActionItems = actionItems.filter(item => 
-    // Se não tiver student_id no banco, mostrar todos por enquanto
-    !item.studentId || item.studentId === id
-  );
-  const studentFollowUpItems = followUpItems.filter(item => 
-    // Se não tiver student_id no banco, mostrar todos por enquanto
-    !item.studentId || item.studentId === id
-  );
+  const [followUpItems, setFollowUpItems] = useState<FollowUpItem[]>([
+    { id: '1', description: 'Verificar progresso nas conexões do LinkedIn', completed: false, createdAt: '2024-01-21' },
+    { id: '2', description: 'Acompanhar implementação do funil de vendas', completed: true, createdAt: '2024-01-20' },
+    { id: '3', description: 'Revisar métricas de tráfego pago', completed: false, createdAt: '2024-01-19' }
+  ]);
+
+  const [notes, setNotes] = useState(`# Anotações - ${student.name}
+
+## Objetivos Principais
+- Crescimento profissional na área de tecnologia
+- Melhoria das habilidades de liderança
+- Expansão da rede de contatos
+
+## Pontos de Atenção
+- Dificuldade com gestão de tempo
+- Necessita de maior confiança em apresentações
+
+## Progressos Observados
+- Melhoria significativa na comunicação
+- Maior proatividade nas ações definidas`);
 
   // Get calls for this student
   const calls = id ? getStudentCalls(id) : [];
 
   const exportReport = () => {
-    const reportData = {
-      student,
-      mentorias: studentMentorias,
-      actionItems: studentActionItems,
-      followUpItems: studentFollowUpItems,
-      generatedAt: new Date().toISOString()
-    };
-    
-    const dataStr = JSON.stringify(reportData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = `relatorio-${student.name.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+    // Logic to export comprehensive report
+    console.log('Exportando relatório completo...');
   };
 
   const handleTabChange = (tab: string) => {
@@ -89,15 +136,15 @@ export const StudentDetails: React.FC = () => {
 
       <PerformanceOverview 
         student={student} 
-        mentorias={studentMentorias} 
-        followUpItems={studentFollowUpItems} 
+        mentorias={mentorias} 
+        followUpItems={followUpItems} 
       />
 
       <StudentTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Tab Content */}
       {activeTab === 'resumo' && (
-        <OverviewTab student={student} mentorias={studentMentorias} />
+        <OverviewTab student={student} mentorias={mentorias} />
       )}
 
       {activeTab === 'calls' && (
@@ -105,31 +152,25 @@ export const StudentDetails: React.FC = () => {
       )}
 
       {activeTab === 'plano' && (
-        <ActionPlanTab actionItems={studentActionItems} />
+        <ActionPlanTab actionItems={actionItems} />
       )}
 
       {activeTab === 'follow-up' && (
-        <FollowUpTab 
-          followUpItems={studentFollowUpItems} 
-          setFollowUpItems={() => {}} // TODO: Implementar atualização real
-        />
+        <FollowUpTab followUpItems={followUpItems} setFollowUpItems={setFollowUpItems} />
       )}
 
       {activeTab === 'relatorio' && (
         <ReportTab 
           student={student} 
-          mentorias={studentMentorias} 
-          actionItems={studentActionItems} 
-          followUpItems={studentFollowUpItems} 
+          mentorias={mentorias} 
+          actionItems={actionItems} 
+          followUpItems={followUpItems} 
           onExportReport={exportReport} 
         />
       )}
 
       {activeTab === 'notas' && (
-        <NotesTab 
-          notes={notes} 
-          onNotesChange={setNotes} 
-        />
+        <NotesTab notes={notes} onNotesChange={setNotes} />
       )}
     </div>
   );

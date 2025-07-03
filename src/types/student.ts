@@ -1,3 +1,4 @@
+
 export interface Student {
   id: string;
   name: string;
@@ -79,7 +80,6 @@ export interface Mentoring {
 
 export interface ActionItem {
   id: string;
-  studentId?: string;
   description: string;
   status: 'pendente' | 'em-progresso' | 'concluido';
   dueDate?: string;
@@ -90,7 +90,6 @@ export interface ActionItem {
 
 export interface FollowUpItem {
   id: string;
-  studentId?: string;
   description: string;
   completed: boolean;
   createdAt: string;

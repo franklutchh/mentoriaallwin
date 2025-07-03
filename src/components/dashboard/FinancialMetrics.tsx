@@ -42,7 +42,7 @@ export const FinancialMetricsComponent: React.FC<FinancialMetricsProps> = ({ met
           </div>
           <h3 className="text-sm font-semibold text-green-700 dark:text-green-300 mb-1">RECEITA TOTAL</h3>
           <p className="text-3xl font-bold text-green-900 dark:text-green-100">{formatCurrency(metrics.totalRevenue)}</p>
-          <p className="text-xs text-green-600 dark:text-green-400 mt-2">Valor acumulado</p>
+          <p className="text-xs text-green-600 dark:text-green-400 mt-2">Crescimento sustentável</p>
         </div>
 
         {/* Receita Mensal */}
@@ -94,7 +94,7 @@ export const FinancialMetricsComponent: React.FC<FinancialMetricsProps> = ({ met
           </div>
           <h3 className="text-sm font-semibold text-red-700 dark:text-red-300 mb-1">INADIMPLÊNCIA</h3>
           <p className="text-3xl font-bold text-red-900 dark:text-red-100">{formatPercentage(metrics.paymentDelayRate)}</p>
-          <p className="text-xs text-red-600 dark:text-red-400 mt-2">{metrics.paymentDelayRate > 10 ? 'Requer atenção' : 'Sob controle'}</p>
+          <p className="text-xs text-red-600 dark:text-red-400 mt-2">Requer atenção urgente</p>
         </div>
 
         {/* Lifetime Value */}
