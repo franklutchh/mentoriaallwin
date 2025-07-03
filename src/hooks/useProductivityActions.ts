@@ -1,196 +1,169 @@
-import { useMemo } from 'react';
-import { useCallsContext } from '../contexts/CallsContext';
-import { PriorityAction, SmartAlert, WeeklyGoal, ProductivityMetrics, Priority, Alert, Goal, ProductivityMetric } from '../types/productivity';
+
+import { useMentoringContext } from '../contexts/MentoringContext';
+import { Priority, Alert, Goal, ProductivityMetric } from '../types/productivity';
 
 export const useProductivityActions = () => {
-  const { students, calls, getStudentCalls } = useCallsContext();
+  const { students, mentorias, actionItems, followUpItems } = useMentoringContext();
 
-  const todaysPriorities = useMemo((): Priority[] => {
-    const today = new Date();
-    const eightDaysAgo = new Date(today.getTime() - (8 * 24 * 60 * 60 * 1000));
-    const priorities: Priority[] = [];
+  // Prioridades de hoje baseadas em dados reais
+  const todaysPriorities: Priority[] = [];
 
-    // Alunos sem calls recentes (8 dias)
-    students.forEach(student => {
-      if (student.status !== 'ativo') return;
-      
-      const studentCalls = getStudentCalls(student.id);
-      const lastCall = studentCalls
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
-      
-      if (!lastCall || new Date(lastCall.date) < eightDaysAgo) {
-        priorities.push({
-          id: `no-call-${student.id}`,
-          title: `Agendar call com ${student.name}`,
-          description: lastCall 
-            ? `Última call foi há ${Math.floor((today.getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000))} dias`
-            : 'Nenhuma call registrada ainda',
-          level: !lastCall ? 'alta' : 'media',
-          student: student.name,
-          estimatedTime: '60 min'
-        });
-      }
-    });
-
-    // Alunos com baixo progresso
-    students.forEach(student => {
-      if (student.status !== 'ativo' || !student.totalTasks) return;
-      
-      const progressPercentage = (student.tasksCompleted! / student.totalTasks) * 100;
-      if (progressPercentage < 50) {
-        priorities.push({
-          id: `low-progress-${student.id}`,
-          title: `Revisar progresso com ${student.name}`,
-          description: `Apenas ${Math.round(progressPercentage)}% das tarefas concluídas`,
-          level: progressPercentage < 25 ? 'alta' : 'media',
-          student: student.name,
-          estimatedTime: '30 min'
-        });
-      }
-    });
-
-    return priorities
-      .sort((a, b) => {
-        const levelOrder = { alta: 3, media: 2, baixa: 1 };
-        return levelOrder[b.level] - levelOrder[a.level];
-      })
-      .slice(0, 8);
-  }, [students, calls, getStudentCalls]);
-
-  const smartAlerts = useMemo((): Alert[] => {
-    const alerts: Alert[] = [];
-    const today = new Date();
-
-    // Alunos críticos sem contato há 8 dias
-    students.forEach(student => {
-      if (student.status !== 'ativo') return;
-      
-      const studentCalls = getStudentCalls(student.id);
-      const lastCall = studentCalls
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
-      
-      if (!lastCall) {
-        alerts.push({
-          id: `critical-${student.id}`,
-          title: 'Aluno Sem Calls Registradas',
-          message: `${student.name} não possui nenhuma call registrada ainda`,
-          details: 'Contato imediato necessário',
-          type: 'urgent',
-          severity: 'alta'
-        });
-      } else {
-        const daysSinceCall = Math.floor((today.getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000));
-        if (daysSinceCall >= 8) {
-          alerts.push({
-            id: `overdue-${student.id}`,
-            title: 'Contato com Aluno em Atraso',
-            message: `${student.name} não tem uma call há ${daysSinceCall} dias`,
-            details: 'Agendar call urgente',
-            type: 'student-delay',
-            severity: 'alta'
+  // Adicionar prioridades baseadas em alunos reais
+  students.forEach(student => {
+    if (student.status === 'ativo') {
+      // Alunos com progresso baixo
+      if (student.totalTasks && student.tasksCompleted) {
+        const progress = (student.tasksCompleted / student.totalTasks) * 100;
+        if (progress < 50) {
+          todaysPriorities.push({
+            id: `progress-${student.id}`,
+            title: 'Acompanhar Progresso Baixo',
+            description: `${student.name} está com ${progress.toFixed(0)}% de conclusão das tarefas`,
+            level: 'alta',
+            student: student.name,
+            estimatedTime: '30 min',
+            completed: false
           });
         }
       }
-    });
 
-    return alerts.slice(0, 5);
-  }, [students, calls, getStudentCalls]);
-
-  const weeklyGoals = useMemo((): Goal[] => {
-    const today = new Date();
-    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-    const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
-    
-    const weekCalls = calls.filter(call => {
-      const callDate = new Date(call.date);
-      return callDate >= startOfWeek && callDate <= endOfWeek && call.status === 'completa';
-    });
-
-    const daysLeft = Math.ceil((endOfWeek.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
-
-    return [
-      {
-        id: 'weekly-calls',
-        title: 'Calls Semanais',
-        description: 'Meta de calls da semana',
-        target: 15,
-        current: weekCalls.length,
-        unit: 'calls',
-        daysLeft
-      },
-      {
-        id: 'follow-ups',
-        title: 'Follow-ups Concluídos',
-        description: 'Acompanhamentos realizados',
-        target: 10,
-        current: 7,
-        unit: 'follow-ups',
-        daysLeft
-      },
-      {
-        id: 'student-progress',
-        title: 'Alunos no Cronograma',
-        description: 'Alunos com progresso adequado',
-        target: students.filter(s => s.status === 'ativo').length,
-        current: students.filter(s => s.status === 'ativo' && (s.tasksCompleted! / s.totalTasks!) > 0.7).length,
-        unit: 'alunos',
-        daysLeft
+      // Alunos com pagamento em atraso
+      if (student.paymentStatus !== 'em-dia') {
+        todaysPriorities.push({
+          id: `payment-${student.id}`,
+          title: 'Resolver Pendência de Pagamento',
+          description: `${student.name} está com status: ${student.paymentStatus}`,
+          level: 'alta',
+          student: student.name,
+          estimatedTime: '15 min',
+          completed: false
+        });
       }
-    ];
-  }, [students, calls]);
+    }
+  });
 
-  const productivityMetrics = useMemo((): ProductivityMetric[] => {
-    const today = new Date().toISOString().split('T')[0];
-    const todaysCalls = calls.filter(call => call.date === today && call.status === 'completa').length;
-    
-    const pendingFollowUps = calls.filter(call => {
-      if (call.status !== 'completa') return false;
-      const callDate = new Date(call.date);
-      const daysSince = Math.floor((new Date().getTime() - callDate.getTime()) / (24 * 60 * 60 * 1000));
-      return daysSince >= 3 && daysSince <= 7;
+  // Alertas inteligentes baseados em dados reais
+  const smartAlerts: Alert[] = [];
+
+  // Alerta para alunos sem sessão recente
+  const tenDaysAgo = new Date();
+  tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
+
+  students.filter(s => s.status === 'ativo').forEach(student => {
+    const studentSessions = mentorias.filter(m => m.studentId === student.id);
+    const lastSession = studentSessions
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+
+    if (!lastSession || new Date(lastSession.date) < tenDaysAgo) {
+      smartAlerts.push({
+        id: `no-session-${student.id}`,
+        type: 'student-delay',
+        severity: 'media',
+        title: 'Aluno sem sessão recente',
+        message: `${student.name} não tem sessões há mais de 10 dias`,
+        details: lastSession 
+          ? `Última sessão: ${new Date(lastSession.date).toLocaleDateString('pt-BR')}`
+          : 'Nenhuma sessão registrada'
+      });
+    }
+  });
+
+  // Follow-ups pendentes
+  const pendingFollowUps = followUpItems.filter(item => !item.completed);
+  if (pendingFollowUps.length > 0) {
+    smartAlerts.push({
+      id: 'pending-followups',
+      type: 'missing-followup',
+      severity: 'media',
+      title: 'Follow-ups Pendentes',
+      message: `${pendingFollowUps.length} follow-ups aguardando conclusão`,
+      details: 'Revise e atualize o status dos acompanhamentos'
+    });
+  }
+
+  // Se não há alertas reais e não há alunos, mostrar estado de boas-vindas
+  if (smartAlerts.length === 0 && students.length === 0) {
+    smartAlerts.push({
+      id: 'welcome',
+      type: 'missing-followup',
+      severity: 'baixa',
+      title: 'Sistema Pronto para Uso',
+      message: 'Cadastre seus primeiros alunos para começar a usar todas as funcionalidades',
+      details: 'Dashboard, métricas e alertas aparecerão automaticamente com dados reais'
+    });
+  }
+
+  // Metas semanais baseadas em dados reais
+  const currentWeekSessions = mentorias.filter(m => {
+    const sessionDate = new Date(m.date);
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    return sessionDate >= startOfWeek;
+  }).length;
+
+  const weeklyGoals: Goal[] = [
+    {
+      id: 'weekly-sessions',
+      title: 'Sessões Semanais',
+      description: 'Meta de sessões para esta semana',
+      current: currentWeekSessions,
+      target: Math.max(students.filter(s => s.status === 'ativo').length * 2, 5),
+      unit: 'sessões',
+      daysLeft: 7 - new Date().getDay()
+    }
+  ];
+
+  // Adicionar meta de follow-ups apenas se existirem
+  if (followUpItems.length > 0) {
+    const completedThisWeek = followUpItems.filter(item => {
+      if (!item.completed) return false;
+      const createdDate = new Date(item.createdAt);
+      const startOfWeek = new Date();
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+      return createdDate >= startOfWeek;
     }).length;
 
-    const studentsNeedingAttention = students.filter(student => {
-      if (student.status !== 'ativo') return false;
-      const studentCalls = getStudentCalls(student.id);
-      const lastCall = studentCalls[studentCalls.length - 1];
-      
-      if (!lastCall) return true;
-      
-      const daysSinceCall = Math.floor((new Date().getTime() - new Date(lastCall.date).getTime()) / (24 * 60 * 60 * 1000));
-      return daysSinceCall >= 8;
-    }).length;
+    weeklyGoals.push({
+      id: 'followup-completion',
+      title: 'Conclusão de Follow-ups',
+      description: 'Follow-ups concluídos esta semana',
+      current: completedThisWeek,
+      target: Math.max(followUpItems.length, 3),
+      unit: 'follow-ups',
+      daysLeft: 7 - new Date().getDay()
+    });
+  }
 
-    return [
-      {
-        id: 'todays-calls',
-        label: 'Calls Hoje',
-        value: todaysCalls.toString(),
-        change: '+12%',
-        trend: 'up',
-        type: 'calls',
-        period: 'hoje'
-      },
-      {
-        id: 'pending-followups',
-        label: 'Follow-ups Pendentes',
-        value: pendingFollowUps.toString(),
-        change: '-5%',
-        trend: 'down',
-        type: 'general',
-        period: 'esta semana'
-      },
-      {
-        id: 'students-attention',
-        label: 'Alunos Precisando Atenção',
-        value: studentsNeedingAttention.toString(),
-        change: 'estável',
-        trend: 'stable',
-        type: 'students',
-        period: 'atual'
-      }
-    ];
-  }, [students, calls, getStudentCalls]);
+  // Métricas de produtividade baseadas em dados reais
+  const productivityMetrics: ProductivityMetric[] = [
+    {
+      id: 'total-students',
+      type: 'students',
+      label: 'Total de Alunos',
+      value: students.length.toString(),
+      change: '0%',
+      trend: 'stable',
+      period: 'Total'
+    },
+    {
+      id: 'active-students',
+      type: 'students',
+      label: 'Alunos Ativos',
+      value: students.filter(s => s.status === 'ativo').length.toString(),
+      change: '0%',
+      trend: 'stable',
+      period: 'Atual'
+    },
+    {
+      id: 'total-sessions',
+      type: 'calls',
+      label: 'Sessões Realizadas',
+      value: mentorias.length.toString(),
+      change: '0%',
+      trend: 'stable',
+      period: 'Total'
+    }
+  ];
 
   return {
     todaysPriorities,

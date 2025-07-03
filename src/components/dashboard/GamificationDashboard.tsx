@@ -60,10 +60,10 @@ export const GamificationDashboard: React.FC<GamificationDashboardProps> = ({ st
                 <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{totalPoints.toLocaleString()}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
-              <TrendingUp className="w-4 h-4" />
-              <span>+12% esta semana</span>
-            </div>
+              <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                <TrendingUp className="w-4 h-4" />
+                <span>Totalizados</span>
+              </div>
           </div>
 
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-100/50 dark:border-green-800/50">

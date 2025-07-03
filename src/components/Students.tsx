@@ -24,17 +24,17 @@ export const Students: React.FC = () => {
   const groups = ['all', ...Array.from(new Set(students.map(s => s.group).filter(Boolean)))];
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+    <div className="max-w-full mx-auto">
+      <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Alunos</h1>
-          <p className="text-gray-600">Gerencie todos os alunos do programa de mentoria</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Alunos</h1>
+          <p className="text-gray-600 text-sm">Gerencie todos os alunos do programa de mentoria</p>
         </div>
         <button
           onClick={() => navigate('/students/new')}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           Adicionar Aluno
         </button>
       </div>
@@ -49,16 +49,16 @@ export const Students: React.FC = () => {
         groups={groups}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredStudents.map((student) => (
           <StudentCard key={student.id} student={student} />
         ))}
       </div>
 
       {filteredStudents.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Nenhum aluno encontrado</p>
-          <p className="text-gray-400 text-sm mt-2">Tente ajustar os filtros de busca</p>
+        <div className="text-center py-8">
+          <p className="text-gray-500 text-base">Nenhum aluno encontrado</p>
+          <p className="text-gray-400 text-sm mt-1">Tente ajustar os filtros de busca</p>
         </div>
       )}
     </div>

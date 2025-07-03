@@ -1,51 +1,62 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Layout } from "./components/Layout";
-import { Dashboard } from "./components/Dashboard";
-import { Students } from "./components/Students";
-import { Calls } from "./components/Calls";
-import { StudentForm } from "./components/StudentForm";
-import { StudentDetails } from "./components/StudentDetails";
-import { CallForm } from "./components/CallForm";
-import { Calendar } from "./components/Calendar";
-import { KnowledgeBase } from "./components/KnowledgeBase";
-import { CallsProvider } from "./contexts/CallsContext";
-import { MentoringProvider } from "./contexts/MentoringContext";
-import NotFound from "./pages/NotFound";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { Dashboard } from './components/Dashboard';
+import { Students } from './components/Students';
+import { StudentDetails } from './components/StudentDetails';
+import { StudentForm } from './components/StudentForm';
+import { Sessions } from './components/Sessions';
+import { MentoringForm } from './components/MentoringForm';
+import { Calendar } from './components/Calendar';
+import { Calls } from './components/Calls';
+import { CallForm } from './components/CallForm';
+import { WeeklyPriorities } from './components/WeeklyPriorities';
+import { KnowledgeBase } from './components/KnowledgeBase';
+import { Auth } from './components/Auth';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthProvider } from './hooks/useAuth';
+import { MentoringProvider } from './contexts/MentoringContext';
+import { CallsProvider } from './contexts/CallsContext';
+import { Toaster } from './components/ui/toaster';
+import { ThemeProvider } from 'next-themes';
+import './App.css';
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <MentoringProvider>
-        <CallsProvider>
-          <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/students" element={<Students />} />
-                <Route path="/students/new" element={<StudentForm />} />
-                <Route path="/students/:id" element={<StudentDetails />} />
-                <Route path="/calls" element={<Calls />} />
-                <Route path="/calls/new" element={<CallForm />} />
-                <Route path="/mentoring/new" element={<CallForm />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/knowledge" element={<KnowledgeBase />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          </BrowserRouter>
-        </CallsProvider>
-      </MentoringProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/*" element={
+              <ProtectedRoute>
+                <MentoringProvider>
+                  <CallsProvider>
+                    <Layout>
+                      <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/students" element={<Students />} />
+                        <Route path="/students/new" element={<StudentForm />} />
+                        <Route path="/students/:id" element={<StudentDetails />} />
+                        <Route path="/sessions" element={<Sessions />} />
+                        <Route path="/sessions/new" element={<MentoringForm />} />
+                        <Route path="/calendar" element={<Calendar />} />
+                        <Route path="/calls" element={<Calls />} />
+                        <Route path="/calls/new" element={<CallForm />} />
+                        <Route path="/priorities" element={<WeeklyPriorities />} />
+                        <Route path="/knowledge" element={<KnowledgeBase />} />
+                      </Routes>
+                    </Layout>
+                  </CallsProvider>
+                </MentoringProvider>
+              </ProtectedRoute>
+            } />
+          </Routes>
+          <Toaster />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
 
 export default App;
