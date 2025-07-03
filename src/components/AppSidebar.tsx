@@ -71,7 +71,7 @@ export function AppSidebar() {
       {/* Sidebar principal */}
       <div 
         className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 z-40 transition-all duration-300 ease-in-out ${
-          isExpanded ? 'w-64' : 'w-12'
+          isExpanded ? 'w-52' : 'w-10'
         }`}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
