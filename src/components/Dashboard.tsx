@@ -61,8 +61,8 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 space-y-1">
-      <div className="w-full">
+    <div className="w-full h-full transition-colors duration-300">
+      <div className="w-full h-full">
         {/* Cards de Produtividade */}
         <ProductivityCards
           totalStudents={totalStudents}

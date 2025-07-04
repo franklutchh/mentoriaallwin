@@ -12,19 +12,19 @@ export const ActionDashboard: React.FC = () => {
   const { todaysPriorities, smartAlerts, weeklyGoals, productivityMetrics } = useProductivityActions();
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {/* Header */}
-      <div className="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded-md">
+      <div className="flex items-center justify-between p-1 bg-card rounded-md border">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-            <Target className="w-4 h-4 text-white" />
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+            <Target className="w-3 h-3 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard de Produtividade</h1>
-            <p className="text-xs text-gray-600 dark:text-gray-300">Seu centro de comando para mentoria orientada por ações</p>
+            <h1 className="text-lg font-bold text-foreground">Dashboard de Produtividade</h1>
+            <p className="text-xs text-muted-foreground">Seu centro de comando para mentoria orientada por ações</p>
           </div>
         </div>
-        <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-md">
+        <div className="flex items-center gap-1 bg-muted text-muted-foreground px-2 py-1 rounded-md">
           <Zap className="w-3 h-3" />
           <span className="font-medium text-xs">Modo Foco Ativo</span>
         </div>
@@ -34,15 +34,15 @@ export const ActionDashboard: React.FC = () => {
       <QuickActions />
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-1">
         {/* Left Column - Priorities & Alerts */}
-        <div className="lg:col-span-2 space-y-2">
+        <div className="lg:col-span-2 space-y-1">
           <TodaysPriorities priorities={todaysPriorities} />
           <SmartAlerts alerts={smartAlerts} />
         </div>
 
         {/* Right Column - Goals & Metrics */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <WeeklyGoals goals={weeklyGoals} />
           <ProductivityMetrics metrics={productivityMetrics} />
         </div>
