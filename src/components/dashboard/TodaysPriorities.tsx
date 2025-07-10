@@ -17,41 +17,41 @@ export const TodaysPriorities: React.FC<TodaysPrioritiesProps> = ({ priorities }
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition-colors duration-300">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Prioridades de Hoje</h2>
-        <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-sm font-medium">
+    <div className="bg-card rounded-lg border p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-foreground">Prioridades de Hoje</h2>
+        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm font-medium">
           {priorities.length} {priorities.length === 1 ? 'item' : 'itens'}
         </span>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         {priorities.map((priority) => (
           <div
             key={priority.id}
-            className={`p-4 rounded-xl border-l-4 ${getPriorityColor(priority.level)} transition-all hover:shadow-md`}
+            className={`p-3 rounded-lg border-l-4 ${getPriorityColor(priority.level)} transition-all hover:shadow-sm`}
           >
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{priority.title}</h3>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                Executar Ação
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-medium text-foreground">{priority.title}</h3>
+              <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md text-sm transition-colors">
+                Executar
               </button>
             </div>
             
-            <p className="text-gray-600 dark:text-gray-300 mb-3">{priority.description}</p>
+            <p className="text-muted-foreground text-sm mb-2">{priority.description}</p>
             
-            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
-                <User className="w-4 h-4" />
+                <User className="w-3 h-3" />
                 <span>{priority.student}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-3 h-3" />
                 <span>{priority.estimatedTime}</span>
               </div>
               {priority.completed && (
-                <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                  <CheckCircle2 className="w-4 h-4" />
+                <div className="flex items-center gap-1 text-green-600">
+                  <CheckCircle2 className="w-3 h-3" />
                   <span>Concluído</span>
                 </div>
               )}
