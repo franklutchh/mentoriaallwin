@@ -25,33 +25,33 @@ export const SmartAlerts: React.FC<SmartAlertsProps> = ({ alerts }) => {
   };
 
   return (
-    <div className="bg-card rounded-lg border p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">Alertas Inteligentes</h2>
-        <span className="bg-destructive/10 text-destructive px-2 py-1 rounded-md text-sm font-medium">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition-colors duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Alertas Inteligentes</h2>
+        <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-3 py-1 rounded-full text-sm font-medium">
           {alerts.filter(a => a.severity === 'alta').length} precisam de atenção
         </span>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
         {alerts.map((alert) => {
           const Icon = getAlertIcon(alert.type);
           return (
             <div
               key={alert.id}
-              className={`p-3 rounded-lg border-l-4 ${getAlertColor(alert.severity)} transition-all hover:shadow-sm`}
+              className={`p-4 rounded-xl border-l-4 ${getAlertColor(alert.severity)} transition-all hover:shadow-md`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-start gap-2 flex-1">
-                  <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <div className="flex items-start gap-3 flex-1">
+                  <Icon className="w-5 h-5 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <h3 className="font-medium mb-1 text-sm">{alert.title}</h3>
-                    <p className="text-xs opacity-90 mb-1">{alert.message}</p>
+                    <h3 className="font-semibold mb-1">{alert.title}</h3>
+                    <p className="text-sm opacity-90 mb-2">{alert.message}</p>
                     <p className="text-xs opacity-75">{alert.details}</p>
                   </div>
                 </div>
-                <button className="text-muted-foreground hover:text-foreground p-1">
-                  <X className="w-3 h-3" />
+                <button className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 p-1">
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
