@@ -19,6 +19,7 @@ import { MentoringProvider } from './contexts/MentoringContext';
 import { CallsProvider } from './contexts/CallsContext';
 import { Toaster } from './components/ui/toaster';
 import { ThemeProvider } from 'next-themes';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import './App.css';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             } />
           </Routes>
           <Toaster />
+          <PWAInstallPrompt />
         </Router>
       </AuthProvider>
     </ThemeProvider>
