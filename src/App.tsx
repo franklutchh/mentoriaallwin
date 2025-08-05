@@ -13,6 +13,9 @@ import { CallForm } from './components/CallForm';
 import { WeeklyPriorities } from './components/WeeklyPriorities';
 import { KnowledgeBase } from './components/KnowledgeBase';
 import { Auth } from './components/Auth';
+import ScaledOffers from './components/ScaledOffers';
+import Offers from './pages/Offers';
+import OfferDetails from './pages/OfferDetails';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';
 import { MentoringProvider } from './contexts/MentoringContext';
@@ -29,6 +32,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/ofertas" element={<Offers />} />
+            <Route path="/ofertas/:id" element={<OfferDetails />} />
             <Route path="/*" element={
               <ProtectedRoute>
                 <MentoringProvider>
@@ -46,6 +51,7 @@ function App() {
                         <Route path="/calls/new" element={<CallForm />} />
                         <Route path="/priorities" element={<WeeklyPriorities />} />
                         <Route path="/knowledge" element={<KnowledgeBase />} />
+                        <Route path="/scaled-offers" element={<ScaledOffers />} />
                       </Routes>
                     </Layout>
                   </CallsProvider>

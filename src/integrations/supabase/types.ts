@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -198,6 +198,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      offers: {
+        Row: {
+          active_ads: number | null
+          advertiser_avatar: string | null
+          advertiser_name: string
+          average_ticket: number | null
+          created_at: string
+          creative_link: string | null
+          description: string | null
+          facebook_link: string | null
+          format: string
+          id: string
+          is_published: boolean | null
+          language: string
+          library_link: string | null
+          likes_count: number | null
+          media_urls: string[] | null
+          niche: string
+          roas: number | null
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          website_link: string | null
+        }
+        Insert: {
+          active_ads?: number | null
+          advertiser_avatar?: string | null
+          advertiser_name: string
+          average_ticket?: number | null
+          created_at?: string
+          creative_link?: string | null
+          description?: string | null
+          facebook_link?: string | null
+          format?: string
+          id?: string
+          is_published?: boolean | null
+          language?: string
+          library_link?: string | null
+          likes_count?: number | null
+          media_urls?: string[] | null
+          niche: string
+          roas?: number | null
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          website_link?: string | null
+        }
+        Update: {
+          active_ads?: number | null
+          advertiser_avatar?: string | null
+          advertiser_name?: string
+          average_ticket?: number | null
+          created_at?: string
+          creative_link?: string | null
+          description?: string | null
+          facebook_link?: string | null
+          format?: string
+          id?: string
+          is_published?: boolean | null
+          language?: string
+          library_link?: string | null
+          likes_count?: number | null
+          media_urls?: string[] | null
+          niche?: string
+          roas?: number | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          website_link?: string | null
+        }
+        Relationships: []
       }
       payment_history: {
         Row: {

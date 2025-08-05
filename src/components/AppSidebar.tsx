@@ -36,6 +36,11 @@ const navigationItems = [
     url: "/knowledge",
     icon: BookOpen,
   },
+  {
+    title: "Ofertas Escaladas",
+    url: "/scaled-offers",
+    icon: Target,
+  },
 ];
 
 export function AppSidebar() {
