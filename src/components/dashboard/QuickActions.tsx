@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Users, TrendingUp, UserPlus, Target } from 'lucide-react';
+import { Plus, Calendar, Users, TrendingUp, UserPlus, Gift } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const QuickActions: React.FC = () => {
@@ -66,28 +66,11 @@ export const QuickActions: React.FC = () => {
       urgent: false
     },
     {
-      id: 'productivity-focus',
-      label: 'Modo Foco',
-      icon: Target,
-      description: 'Ativar sessão de trabalho focado',
-      action: () => {
-        toast({
-          title: "Modo Foco Ativado",
-          description: "Sessão de 25 minutos iniciada. Concentre-se nas suas tarefas mais importantes!",
-        });
-        
-        let timeLeft = 25 * 60;
-        const focusTimer = setInterval(() => {
-          timeLeft -= 1;
-          if (timeLeft <= 0) {
-            clearInterval(focusTimer);
-            toast({
-              title: "Sessão de Foco Concluída!",
-              description: "Parabéns! Você completou 25 minutos de trabalho focado. Que tal uma pausa?",
-            });
-          }
-        }, 1000);
-      },
+      id: 'add-offer',
+      label: 'Adicionar Oferta',
+      icon: Gift,
+      description: 'Criar nova oferta para mentorados',
+      action: () => navigate('/offers'),
       color: 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
       urgent: false
     }

@@ -89,20 +89,20 @@ export const Dashboard: React.FC = () => {
         <div className="text-center py-12 bg-card rounded-lg shadow-sm border">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
             <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
           <h3 className="text-lg font-bold text-foreground mb-2">
-            Bem-vindo ao Sistema de Mentoria
+            Dashboard Pronto para Uso
           </h3>
           <p className="text-muted-foreground mb-4 max-w-md mx-auto text-sm">
-            Comece adicionando seu primeiro aluno para ver métricas, sessões e acompanhar o progresso.
+            Seu painel de controle está configurado. Adicione seus primeiros alunos e comece a acompanhar o crescimento da sua mentoria.
           </p>
           <button
-            onClick={() => window.location.href = '/students'}
+            onClick={() => window.location.href = '/students/new'}
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors shadow-md"
           >
-            Adicionar Primeiro Aluno
+            Começar Agora
           </button>
         </div>
       )}
