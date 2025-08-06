@@ -22,13 +22,28 @@ export default function ScaledOffers() {
   const [formData, setFormData] = useState<CreateOfferRequest>({
     title: '',
     description: '',
-    advertiser_name: '',
+    advertiser_name: 'Admin',
     status: 'ativo',
     format: 'videos',
     niche: '',
     language: 'portugues',
-    is_published: false,
+    is_published: true,
   });
+
+  const nicheOptions = [
+    'Alimentação',
+    'Beleza e Estética',
+    'Casa e Decoração',
+    'Educação',
+    'Eletrônicos',
+    'Esportes e Fitness',
+    'Moda e Acessórios',
+    'Pets',
+    'Saúde e Bem-estar',
+    'Tecnologia',
+    'Turismo e Viagem',
+    'Outros'
+  ];
 
   useEffect(() => {
     fetchOffers();
@@ -127,12 +142,12 @@ export default function ScaledOffers() {
     setFormData({
       title: '',
       description: '',
-      advertiser_name: '',
+      advertiser_name: 'Admin',
       status: 'ativo',
       format: 'videos',
       niche: '',
       language: 'portugues',
-      is_published: false,
+      is_published: true,
     });
     setEditingOffer(null);
     setIsDialogOpen(false);
@@ -205,24 +220,20 @@ export default function ScaledOffers() {
                         />
                       </div>
                       
-                      <div>
-                        <Label htmlFor="advertiser_name">Nome do Anunciante *</Label>
-                        <Input
-                          id="advertiser_name"
-                          value={formData.advertiser_name}
-                          onChange={(e) => setFormData({ ...formData, advertiser_name: e.target.value })}
-                          required
-                        />
-                      </div>
-                      
-                      <div>
+                      <div className="col-span-2">
                         <Label htmlFor="niche">Nicho *</Label>
-                        <Input
-                          id="niche"
-                          value={formData.niche}
-                          onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
-                          required
-                        />
+                        <Select value={formData.niche} onValueChange={(value: any) => setFormData({ ...formData, niche: value })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione um nicho" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {nicheOptions.map((niche) => (
+                              <SelectItem key={niche} value={niche}>
+                                {niche}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div>
@@ -268,23 +279,6 @@ export default function ScaledOffers() {
                         </Select>
                       </div>
                       
-                      <div>
-                        <Label htmlFor="thumbnail_url">URL da Thumbnail</Label>
-                        <Input
-                          id="thumbnail_url"
-                          value={formData.thumbnail_url || ''}
-                          onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                        />
-                      </div>
-                      
-                      <div className="col-span-2 flex items-center space-x-2">
-                        <Switch
-                          id="is_published"
-                          checked={formData.is_published}
-                          onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
-                        />
-                        <Label htmlFor="is_published">Publicar oferta</Label>
-                      </div>
                     </div>
                   </TabsContent>
                   
