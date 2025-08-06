@@ -20,52 +20,39 @@ export default {
 		},
 		extend: {
 			colors: {
-				// Apple-inspired design system com paleta personalizada
-				brand: {
-					purple: '#9B90F9',
-					'purple-medium': '#3B2FA4', 
-					'purple-dark': '#191250',
-					'purple-black': '#191332'
-				},
-				primary: {
-					DEFAULT: '#9B90F9',
-					foreground: '#191332',
-					50: '#F5F3FF',
-					100: '#EDE9FE', 
-					500: '#9B90F9',
-					600: '#3B2FA4',
-					700: '#191250',
-					900: '#191332'
-				},
-				secondary: {
-					DEFAULT: '#3B2FA4',
-					foreground: '#F5F3FF'
-				},
-				accent: {
-					DEFAULT: '#191250',
-					foreground: '#F5F3FF'
-				},
-				background: '#FAFAFA',
-				foreground: '#191332',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
 				card: {
-					DEFAULT: 'rgba(255, 255, 255, 0.8)',
-					foreground: '#191332'
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))'
 				},
 				popover: {
-					DEFAULT: 'rgba(255, 255, 255, 0.95)',
-					foreground: '#191332'
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))'
+				},
+				primary: {
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))'
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				muted: {
-					DEFAULT: '#F5F5F7',
-					foreground: '#6B7280'
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
 				},
-				border: '#E5E7EB',
-				input: '#F3F4F6',
-				ring: '#9B90F9',
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
+				},
 				destructive: {
-					DEFAULT: '#EF4444',
-					foreground: '#FFFFFF'
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
