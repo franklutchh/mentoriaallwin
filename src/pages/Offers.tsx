@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Heart, ExternalLink, TrendingUp, Users } from 'lucide-react';
 import { toast } from 'sonner';
@@ -20,6 +21,27 @@ export default function Offers() {
   useEffect(() => {
     fetchOffers();
   }, [filters]);
+
+  // SEO
+  useEffect(() => {
+    document.title = 'Ofertas Escaladas | Descubra ofertas que performam';
+    const desc = 'Explore ofertas escaladas com filtros por status, formato e idioma.';
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', desc);
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', window.location.href);
+  }, []);
 
   const fetchOffers = async () => {
     try {
@@ -106,6 +128,15 @@ export default function Offers() {
     }
   };
 
+  const getStatusRingClass = (status: string) => {
+    switch (status) {
+      case 'ativo': return 'ring-1 ring-primary/40';
+      case 'pausado': return 'ring-1 ring-secondary/40';
+      case 'finalizado': return 'ring-1 ring-destructive/40';
+      default: return 'ring-1 ring-border';
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4">
@@ -138,7 +169,7 @@ export default function Offers() {
 
       <div className="max-w-7xl mx-auto p-4">
         {/* Filters */}
-        <div className="bg-card p-6 rounded-lg border mb-8">
+        <div className="bg-card p-6 rounded-xl border shadow-sm mb-8 animate-enter">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             <div className="lg:col-span-2">
               <div className="relative">
@@ -207,7 +238,7 @@ export default function Offers() {
         {/* Offers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
-            <Card key={offer.id} className="group hover-scale hover:shadow-2xl transition-all duration-300 cursor-pointer hover:ring-1 hover:ring-primary/30" 
+            <Card key={offer.id} className={`group hover-scale hover:shadow-2xl transition-all duration-300 cursor-pointer ${getStatusRingClass(offer.status)} rounded-xl`} 
                   onClick={() => window.location.href = `/ofertas/${offer.id}`}>
               <CardContent className="p-6">
                 {/* Cover */}
@@ -226,13 +257,13 @@ export default function Offers() {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    {offer.advertiser_avatar && (
-                      <img 
-                        src={offer.advertiser_avatar} 
-                        alt={offer.advertiser_name}
-                        className="h-10 w-10 rounded-full object-cover"
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage 
+                        src={offer.advertiser_avatar || ''} 
+                        alt={`Avatar de ${offer.advertiser_name}`} 
                       />
-                    )}
+                      <AvatarFallback>{offer.advertiser_name?.[0] || 'A'}</AvatarFallback>
+                    </Avatar>
                     <div>
                       <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                         {offer.title}
@@ -240,9 +271,14 @@ export default function Offers() {
                       <p className="text-sm text-muted-foreground">{offer.advertiser_name}</p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Heart className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getStatusBadgeVariant(offer.status)}>
+                      {offer.status === 'ativo' ? 'Escalando' : offer.status === 'pausado' ? 'Pré-Escala' : 'Finalizado'}
+                    </Badge>
+                    <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Badges */}
