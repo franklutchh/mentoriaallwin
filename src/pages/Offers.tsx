@@ -75,12 +75,13 @@ export default function Offers() {
   };
 
   const handleFilterChange = (key: keyof OfferFilters, value: string) => {
-    const newFilters = { ...filters, [key]: value || undefined };
+    const normalized = value === 'all' ? undefined : (value || undefined);
+    const newFilters = { ...filters, [key]: normalized };
     setFilters(newFilters);
     
     const params = new URLSearchParams();
     Object.entries(newFilters).forEach(([k, v]) => {
-      if (v) params.set(k, v);
+      if (v) params.set(k, String(v));
     });
     setSearchParams(params);
   };
@@ -155,7 +156,7 @@ export default function Offers() {
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os Status</SelectItem>
+                <SelectItem value="all">Todos os Status</SelectItem>
                 <SelectItem value="ativo">Ativo</SelectItem>
                 <SelectItem value="pausado">Pausado</SelectItem>
                 <SelectItem value="finalizado">Finalizado</SelectItem>
@@ -167,7 +168,7 @@ export default function Offers() {
                 <SelectValue placeholder="Formato" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os Formatos</SelectItem>
+                <SelectItem value="all">Todos os Formatos</SelectItem>
                 <SelectItem value="videos">Vídeos</SelectItem>
                 <SelectItem value="imagens">Imagens</SelectItem>
                 <SelectItem value="carrossel">Carrossel</SelectItem>
@@ -180,7 +181,7 @@ export default function Offers() {
                 <SelectValue placeholder="Idioma" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os Idiomas</SelectItem>
+                <SelectItem value="all">Todos os Idiomas</SelectItem>
                 <SelectItem value="portugues">Português</SelectItem>
                 <SelectItem value="ingles">Inglês</SelectItem>
                 <SelectItem value="espanhol">Espanhol</SelectItem>
