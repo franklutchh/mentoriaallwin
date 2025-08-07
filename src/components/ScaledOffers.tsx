@@ -143,14 +143,30 @@ export default function ScaledOffers() {
       title: '',
       description: '',
       advertiser_name: 'Admin',
+      advertiser_avatar: '',
       status: 'ativo',
       format: 'videos',
       niche: '',
       language: 'portugues',
+      thumbnail_url: '',
       is_published: true,
     });
     setEditingOffer(null);
     setIsDialogOpen(false);
+  };
+
+  const uploadToBucket = async (file: File, folder: 'thumbnails' | 'avatars') => {
+    const ext = file.name.split('.').pop();
+    const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from('offers').upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: true,
+      contentType: file.type,
+    });
+    if (error) throw error;
+    const { data } = supabase.storage.from('offers').getPublicUrl(fileName);
+    toast.success('Imagem enviada com sucesso!');
+    return data.publicUrl;
   };
 
   const getStatusBadgeVariant = (status: string) => {
@@ -278,7 +294,62 @@ export default function ScaledOffers() {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
+                      <div className="col-span-2 grid grid-cols-2 gap-4">
+                        <div>
+                          <Label>Imagem de Capa (thumbnail)</Label>
+                          {formData.thumbnail_url && (
+                            <img
+                              src={formData.thumbnail_url}
+                              alt={`Capa da oferta ${formData.title || ''}`}
+                              loading="lazy"
+                              className="mt-2 w-full h-32 object-cover rounded-md border"
+                            />
+                          )}
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              try {
+                                const url = await uploadToBucket(file, 'thumbnails');
+                                setFormData({ ...formData, thumbnail_url: url });
+                              } catch (err) {
+                                console.error(err);
+                                toast.error('Falha ao enviar a imagem de capa');
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <Label>Avatar do Anunciante</Label>
+                          {formData.advertiser_avatar && (
+                            <img
+                              src={formData.advertiser_avatar}
+                              alt={`Avatar do anunciante ${formData.advertiser_name || ''}`}
+                              loading="lazy"
+                              className="mt-2 w-24 h-24 object-cover rounded-full border"
+                            />
+                          )}
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              try {
+                                const url = await uploadToBucket(file, 'avatars');
+                                setFormData({ ...formData, advertiser_avatar: url });
+                              } catch (err) {
+                                console.error(err);
+                                toast.error('Falha ao enviar o avatar do anunciante');
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </TabsContent>
                   

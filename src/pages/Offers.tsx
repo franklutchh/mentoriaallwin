@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Heart, ExternalLink, TrendingUp, Users } from 'lucide-react';
 import { toast } from 'sonner';
@@ -206,9 +207,22 @@ export default function Offers() {
         {/* Offers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
-            <Card key={offer.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer" 
+            <Card key={offer.id} className="group hover-scale hover:shadow-2xl transition-all duration-300 cursor-pointer hover:ring-1 hover:ring-primary/30" 
                   onClick={() => window.location.href = `/ofertas/${offer.id}`}>
               <CardContent className="p-6">
+                {/* Cover */}
+                {offer.thumbnail_url && (
+                  <div className="mb-4 overflow-hidden rounded-lg border">
+                    <AspectRatio ratio={16/9}>
+                      <img
+                        src={offer.thumbnail_url}
+                        alt={`Imagem da oferta ${offer.title} por ${offer.advertiser_name}`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </AspectRatio>
+                  </div>
+                )}
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
