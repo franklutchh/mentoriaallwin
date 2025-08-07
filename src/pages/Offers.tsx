@@ -2,14 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Offer, OfferFilters } from '@/types/offer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Heart, ExternalLink, TrendingUp, Users } from 'lucide-react';
+import OfferCard from '@/components/offers/OfferCard';
+import OffersFilters from '@/components/offers/OffersFilters';
 import { toast } from 'sonner';
 
 export default function Offers() {
@@ -42,6 +36,29 @@ export default function Offers() {
     }
     canonical.setAttribute('href', window.location.href);
   }, []);
+
+  // Structured Data (JSON-LD)
+  useEffect(() => {
+    const data = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: offers.map((o, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `${window.location.origin}/ofertas/${o.id}`,
+        name: o.title,
+      })),
+    };
+
+    let script = document.getElementById('offers-jsonld') as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'offers-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(data);
+  }, [offers]);
 
   const fetchOffers = async () => {
     try {
@@ -168,165 +185,12 @@ export default function Offers() {
       </div>
 
       <div className="max-w-7xl mx-auto p-4">
-        {/* Filters */}
-        <div className="bg-card p-6 rounded-xl border shadow-sm mb-8 animate-enter">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-            <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Buscar ofertas..."
-                  value={filters.search || ''}
-                  onChange={(e) => handleFilterChange('search', e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            <Select value={filters.status || ''} onValueChange={(value) => handleFilterChange('status', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Status</SelectItem>
-                <SelectItem value="ativo">Ativo</SelectItem>
-                <SelectItem value="pausado">Pausado</SelectItem>
-                <SelectItem value="finalizado">Finalizado</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filters.format || ''} onValueChange={(value) => handleFilterChange('format', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Formato" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Formatos</SelectItem>
-                <SelectItem value="videos">Vídeos</SelectItem>
-                <SelectItem value="imagens">Imagens</SelectItem>
-                <SelectItem value="carrossel">Carrossel</SelectItem>
-                <SelectItem value="colecao">Coleção</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filters.language || ''} onValueChange={(value) => handleFilterChange('language', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Idioma" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Idiomas</SelectItem>
-                <SelectItem value="portugues">Português</SelectItem>
-                <SelectItem value="ingles">Inglês</SelectItem>
-                <SelectItem value="espanhol">Espanhol</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filters.sortBy || ''} onValueChange={(value) => handleFilterChange('sortBy', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Ordenar por" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recent">Mais Recentes</SelectItem>
-                <SelectItem value="oldest">Mais Antigos</SelectItem>
-                <SelectItem value="likes">Mais Curtidos</SelectItem>
-                <SelectItem value="roas">Maior ROAS</SelectItem>
-                <SelectItem value="ads">Mais Anúncios</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <OffersFilters filters={filters} onChange={handleFilterChange} />
 
         {/* Offers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
-            <Card key={offer.id} className={`group hover-scale hover:shadow-2xl transition-all duration-300 cursor-pointer ${getStatusRingClass(offer.status)} rounded-xl`} 
-                  onClick={() => window.location.href = `/ofertas/${offer.id}`}>
-              <CardContent className="p-6">
-                {/* Cover */}
-                {offer.thumbnail_url && (
-                  <div className="mb-4 overflow-hidden rounded-lg border">
-                    <AspectRatio ratio={16/9}>
-                      <img
-                        src={offer.thumbnail_url}
-                        alt={`Imagem da oferta ${offer.title} por ${offer.advertiser_name}`}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    </AspectRatio>
-                  </div>
-                )}
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage 
-                        src={offer.advertiser_avatar || ''} 
-                        alt={`Avatar de ${offer.advertiser_name}`} 
-                      />
-                      <AvatarFallback>{offer.advertiser_name?.[0] || 'A'}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {offer.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">{offer.advertiser_name}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={getStatusBadgeVariant(offer.status)}>
-                      {offer.status === 'ativo' ? 'Escalando' : offer.status === 'pausado' ? 'Pré-Escala' : 'Finalizado'}
-                    </Badge>
-                    <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Badges */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge variant={getStatusBadgeVariant(offer.status)}>
-                    {offer.status}
-                  </Badge>
-                  <Badge variant={getFormatBadgeVariant(offer.format)}>
-                    {offer.format}
-                  </Badge>
-                  <Badge variant="outline">{offer.niche}</Badge>
-                </div>
-
-                {/* Description */}
-                {offer.description && (
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {offer.description}
-                  </p>
-                )}
-
-                {/* Metrics */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  {offer.active_ads > 0 && (
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{offer.active_ads} anúncios</span>
-                    </div>
-                  )}
-                  {offer.roas && (
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">ROAS: {offer.roas.toFixed(2)}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Heart className="h-4 w-4" />
-                    <span>{offer.likes_count}</span>
-                  </div>
-                  <Button variant="ghost" size="sm">
-                    <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <OfferCard key={offer.id} offer={offer} />
           ))}
         </div>
 
