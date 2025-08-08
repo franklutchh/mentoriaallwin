@@ -5,6 +5,7 @@ import { Offer, OfferFilters } from '@/types/offer';
 import OfferCard from '@/components/offers/OfferCard';
 import OffersFilters from '@/components/offers/OffersFilters';
 import { toast } from 'sonner';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Offers() {
   const [offers, setOffers] = useState<Offer[]>([]);
