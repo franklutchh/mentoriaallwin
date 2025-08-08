@@ -19,6 +19,7 @@ export default function ScaledOffers() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [allowClose, setAllowClose] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
   const [currentStep, setCurrentStep] = useState<FormStep>('basic');
   const [formData, setFormData] = useState<CreateOfferRequest>({
@@ -125,6 +126,7 @@ export default function ScaledOffers() {
       is_published: offer.is_published,
     });
     setCurrentStep('basic');
+    setAllowClose(false);
     setIsDialogOpen(true);
   };
 
@@ -160,6 +162,7 @@ export default function ScaledOffers() {
     });
     setEditingOffer(null);
     setCurrentStep('basic');
+    setAllowClose(true);
     setIsDialogOpen(false);
   };
 
@@ -436,7 +439,19 @@ export default function ScaledOffers() {
               Ver Página Pública
             </a>
           </Button>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            if (open) {
+              setAllowClose(false);
+              setIsDialogOpen(true);
+            } else {
+              if (allowClose) {
+                setIsDialogOpen(false);
+              } else {
+                // bloqueia fechamentos não autorizados
+                setIsDialogOpen(true);
+              }
+            }
+          }}>
             <DialogTrigger asChild>
               <Button onClick={() => resetForm()}>
                 <Plus className="mr-2 h-4 w-4" />
