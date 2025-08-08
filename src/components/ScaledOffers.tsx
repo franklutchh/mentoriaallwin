@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Offer, CreateOfferRequest } from '@/types/offer';
@@ -6,19 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, ExternalLink, Eye } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Eye, ArrowRight, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+
+type FormStep = 'basic' | 'links' | 'metrics';
 
 export default function ScaledOffers() {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
+  const [currentStep, setCurrentStep] = useState<FormStep>('basic');
   const [formData, setFormData] = useState<CreateOfferRequest>({
     title: '',
     description: '',
@@ -43,6 +45,12 @@ export default function ScaledOffers() {
     'Tecnologia',
     'Turismo e Viagem',
     'Outros'
+  ];
+
+  const offerStatusOptions = [
+    { value: 'ativo', label: 'Escalando' },
+    { value: 'pausado', label: 'Pré-Escala' },
+    { value: 'finalizado', label: 'Validando' }
   ];
 
   useEffect(() => {
@@ -102,7 +110,6 @@ export default function ScaledOffers() {
       title: offer.title,
       description: offer.description || '',
       advertiser_name: offer.advertiser_name,
-      advertiser_avatar: offer.advertiser_avatar || '',
       facebook_link: offer.facebook_link || '',
       creative_link: offer.creative_link || '',
       library_link: offer.library_link || '',
@@ -117,6 +124,7 @@ export default function ScaledOffers() {
       thumbnail_url: offer.thumbnail_url || '',
       is_published: offer.is_published,
     });
+    setCurrentStep('basic');
     setIsDialogOpen(true);
   };
 
@@ -143,7 +151,6 @@ export default function ScaledOffers() {
       title: '',
       description: '',
       advertiser_name: 'Admin',
-      advertiser_avatar: '',
       status: 'ativo',
       format: 'videos',
       niche: '',
@@ -152,10 +159,11 @@ export default function ScaledOffers() {
       is_published: true,
     });
     setEditingOffer(null);
+    setCurrentStep('basic');
     setIsDialogOpen(false);
   };
 
-  const uploadToBucket = async (file: File, folder: 'thumbnails' | 'avatars') => {
+  const uploadToBucket = async (file: File, folder: 'thumbnails') => {
     const ext = file.name.split('.').pop();
     const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
     const { error } = await supabase.storage.from('offers').upload(fileName, file, {
@@ -169,12 +177,248 @@ export default function ScaledOffers() {
     return data.publicUrl;
   };
 
+  const canProceedToNext = () => {
+    if (currentStep === 'basic') {
+      return formData.title && formData.niche && formData.advertiser_name;
+    }
+    return true;
+  };
+
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case 'ativo': return 'default';
       case 'pausado': return 'secondary';
       case 'finalizado': return 'destructive';
       default: return 'outline';
+    }
+  };
+
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case 'basic': return 'Informações Básicas';
+      case 'links': return 'Links e Referências';
+      case 'metrics': return 'Métricas e Status';
+      default: return 'Nova Oferta';
+    }
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 'basic':
+        return (
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="title">Título *</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+                placeholder="Nome da oferta"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="description">Descrição</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                placeholder="Descreva brevemente a oferta"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="advertiser_name">Anunciante *</Label>
+              <Input
+                id="advertiser_name"
+                value={formData.advertiser_name}
+                onChange={(e) => setFormData({ ...formData, advertiser_name: e.target.value })}
+                required
+                placeholder="Nome do anunciante"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="niche">Nicho *</Label>
+              <Select value={formData.niche} onValueChange={(value: any) => setFormData({ ...formData, niche: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um nicho" />
+                </SelectTrigger>
+                <SelectContent>
+                  {nicheOptions.map((niche) => (
+                    <SelectItem key={niche} value={niche}>
+                      {niche}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="format">Formato</Label>
+                <Select value={formData.format} onValueChange={(value: any) => setFormData({ ...formData, format: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="videos">Vídeos</SelectItem>
+                    <SelectItem value="imagens">Imagens</SelectItem>
+                    <SelectItem value="carrossel">Carrossel</SelectItem>
+                    <SelectItem value="colecao">Coleção</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="language">Idioma</Label>
+                <Select value={formData.language} onValueChange={(value: any) => setFormData({ ...formData, language: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="portugues">Português</SelectItem>
+                    <SelectItem value="ingles">Inglês</SelectItem>
+                    <SelectItem value="espanhol">Espanhol</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label>Imagem de Capa</Label>
+              {formData.thumbnail_url && (
+                <img
+                  src={formData.thumbnail_url}
+                  alt={`Capa da oferta ${formData.title || ''}`}
+                  loading="lazy"
+                  className="mt-2 w-full h-40 object-cover rounded-lg border"
+                />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const url = await uploadToBucket(file, 'thumbnails');
+                    setFormData({ ...formData, thumbnail_url: url });
+                  } catch (err) {
+                    console.error(err);
+                    toast.error('Falha ao enviar a imagem');
+                  }
+                }}
+                className="mt-2"
+              />
+            </div>
+          </div>
+        );
+
+      case 'links':
+        return (
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="facebook_link">Link do Facebook</Label>
+              <Input
+                id="facebook_link"
+                value={formData.facebook_link || ''}
+                onChange={(e) => setFormData({ ...formData, facebook_link: e.target.value })}
+                placeholder="https://facebook.com/..."
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="creative_link">Link do Criativo</Label>
+              <Input
+                id="creative_link"
+                value={formData.creative_link || ''}
+                onChange={(e) => setFormData({ ...formData, creative_link: e.target.value })}
+                placeholder="Link para o material criativo"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="library_link">Link da Biblioteca</Label>
+              <Input
+                id="library_link"
+                value={formData.library_link || ''}
+                onChange={(e) => setFormData({ ...formData, library_link: e.target.value })}
+                placeholder="Link da biblioteca de anúncios"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="website_link">Link do Site</Label>
+              <Input
+                id="website_link"
+                value={formData.website_link || ''}
+                onChange={(e) => setFormData({ ...formData, website_link: e.target.value })}
+                placeholder="Site da oferta"
+              />
+            </div>
+          </div>
+        );
+
+      case 'metrics':
+        return (
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="status">Status da Oferta</Label>
+              <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {offerStatusOptions.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="active_ads">Anúncios Ativos</Label>
+                <Input
+                  id="active_ads"
+                  type="number"
+                  value={formData.active_ads || ''}
+                  onChange={(e) => setFormData({ ...formData, active_ads: parseInt(e.target.value) || 0 })}
+                  placeholder="0"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="roas">ROAS</Label>
+                <Input
+                  id="roas"
+                  type="number"
+                  step="0.1"
+                  value={formData.roas || ''}
+                  onChange={(e) => setFormData({ ...formData, roas: parseFloat(e.target.value) || undefined })}
+                  placeholder="2.0"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="average_ticket">Ticket Médio (R$)</Label>
+              <Input
+                id="average_ticket"
+                type="number"
+                step="0.01"
+                value={formData.average_ticket || ''}
+                onChange={(e) => setFormData({ ...formData, average_ticket: parseFloat(e.target.value) || undefined })}
+                placeholder="47.00"
+              />
+            </div>
+          </div>
+        );
     }
   };
 
@@ -199,244 +443,60 @@ export default function ScaledOffers() {
                 Nova Oferta
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>
-                  {editingOffer ? 'Editar Oferta' : 'Nova Oferta'}
+                  {editingOffer ? 'Editar Oferta' : getStepTitle()}
                 </DialogTitle>
               </DialogHeader>
               
               <form onSubmit={handleSubmit} className="space-y-6">
-                <Tabs defaultValue="basic" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="basic">Básico</TabsTrigger>
-                    <TabsTrigger value="links">Links</TabsTrigger>
-                    <TabsTrigger value="metrics">Métricas</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="basic" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="col-span-2">
-                        <Label htmlFor="title">Título *</Label>
-                        <Input
-                          id="title"
-                          value={formData.title}
-                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                          required
-                        />
-                      </div>
-                      
-                      <div className="col-span-2">
-                        <Label htmlFor="description">Descrição</Label>
-                        <Textarea
-                          id="description"
-                          value={formData.description}
-                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                          rows={3}
-                        />
-                      </div>
-                      
-                      <div className="col-span-2">
-                        <Label htmlFor="niche">Nicho *</Label>
-                        <Select value={formData.niche} onValueChange={(value: any) => setFormData({ ...formData, niche: value })}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione um nicho" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {nicheOptions.map((niche) => (
-                              <SelectItem key={niche} value={niche}>
-                                {niche}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="status">Status</Label>
-                        <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="ativo">Ativo</SelectItem>
-                            <SelectItem value="pausado">Pausado</SelectItem>
-                            <SelectItem value="finalizado">Finalizado</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="format">Formato</Label>
-                        <Select value={formData.format} onValueChange={(value: any) => setFormData({ ...formData, format: value })}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="videos">Vídeos</SelectItem>
-                            <SelectItem value="imagens">Imagens</SelectItem>
-                            <SelectItem value="carrossel">Carrossel</SelectItem>
-                            <SelectItem value="colecao">Coleção</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="language">Idioma</Label>
-                        <Select value={formData.language} onValueChange={(value: any) => setFormData({ ...formData, language: value })}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="portugues">Português</SelectItem>
-                            <SelectItem value="ingles">Inglês</SelectItem>
-                            <SelectItem value="espanhol">Espanhol</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="col-span-2 grid grid-cols-2 gap-4">
-                        <div>
-                          <Label>Imagem de Capa (thumbnail)</Label>
-                          {formData.thumbnail_url && (
-                            <img
-                              src={formData.thumbnail_url}
-                              alt={`Capa da oferta ${formData.title || ''}`}
-                              loading="lazy"
-                              className="mt-2 w-full h-32 object-cover rounded-md border"
-                            />
-                          )}
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={async (e) => {
-                              const file = e.target.files?.[0];
-                              if (!file) return;
-                              try {
-                                const url = await uploadToBucket(file, 'thumbnails');
-                                setFormData({ ...formData, thumbnail_url: url });
-                              } catch (err) {
-                                console.error(err);
-                                toast.error('Falha ao enviar a imagem de capa');
-                              }
-                            }}
-                          />
-                        </div>
-
-                        <div>
-                          <Label>Avatar do Anunciante</Label>
-                          {formData.advertiser_avatar && (
-                            <img
-                              src={formData.advertiser_avatar}
-                              alt={`Avatar do anunciante ${formData.advertiser_name || ''}`}
-                              loading="lazy"
-                              className="mt-2 w-24 h-24 object-cover rounded-full border"
-                            />
-                          )}
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={async (e) => {
-                              const file = e.target.files?.[0];
-                              if (!file) return;
-                              try {
-                                const url = await uploadToBucket(file, 'avatars');
-                                setFormData({ ...formData, advertiser_avatar: url });
-                              } catch (err) {
-                                console.error(err);
-                                toast.error('Falha ao enviar o avatar do anunciante');
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="links" className="space-y-4">
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="facebook_link">Link do Facebook</Label>
-                        <Input
-                          id="facebook_link"
-                          value={formData.facebook_link || ''}
-                          onChange={(e) => setFormData({ ...formData, facebook_link: e.target.value })}
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="creative_link">Link do Criativo</Label>
-                        <Input
-                          id="creative_link"
-                          value={formData.creative_link || ''}
-                          onChange={(e) => setFormData({ ...formData, creative_link: e.target.value })}
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="library_link">Link da Biblioteca</Label>
-                        <Input
-                          id="library_link"
-                          value={formData.library_link || ''}
-                          onChange={(e) => setFormData({ ...formData, library_link: e.target.value })}
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="website_link">Link do Site</Label>
-                        <Input
-                          id="website_link"
-                          value={formData.website_link || ''}
-                          onChange={(e) => setFormData({ ...formData, website_link: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="metrics" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="active_ads">Anúncios Ativos</Label>
-                        <Input
-                          id="active_ads"
-                          type="number"
-                          value={formData.active_ads || ''}
-                          onChange={(e) => setFormData({ ...formData, active_ads: parseInt(e.target.value) || 0 })}
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="roas">ROAS</Label>
-                        <Input
-                          id="roas"
-                          type="number"
-                          step="0.01"
-                          value={formData.roas || ''}
-                          onChange={(e) => setFormData({ ...formData, roas: parseFloat(e.target.value) || undefined })}
-                        />
-                      </div>
-                      
-                      <div className="col-span-2">
-                        <Label htmlFor="average_ticket">Ticket Médio (R$)</Label>
-                        <Input
-                          id="average_ticket"
-                          type="number"
-                          step="0.01"
-                          value={formData.average_ticket || ''}
-                          onChange={(e) => setFormData({ ...formData, average_ticket: parseFloat(e.target.value) || undefined })}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                {renderStepContent()}
                 
-                <div className="flex justify-end gap-3">
-                  <Button type="button" variant="outline" onClick={resetForm}>
-                    Cancelar
-                  </Button>
-                  <Button type="submit">
-                    {editingOffer ? 'Atualizar' : 'Criar'} Oferta
-                  </Button>
+                <div className="flex justify-between pt-6 border-t">
+                  <div className="flex gap-2">
+                    {currentStep !== 'basic' && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => {
+                          if (currentStep === 'links') setCurrentStep('basic');
+                          if (currentStep === 'metrics') setCurrentStep('links');
+                        }}
+                      >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Voltar
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button type="button" variant="outline" onClick={resetForm}>
+                      Cancelar
+                    </Button>
+                    
+                    {currentStep === 'metrics' ? (
+                      <Button type="submit">
+                        {editingOffer ? 'Atualizar' : 'Criar'} Oferta
+                      </Button>
+                    ) : (
+                      <Button 
+                        type="button" 
+                        onClick={() => {
+                          if (!canProceedToNext()) {
+                            toast.error('Preencha os campos obrigatórios');
+                            return;
+                          }
+                          if (currentStep === 'basic') setCurrentStep('links');
+                          if (currentStep === 'links') setCurrentStep('metrics');
+                        }}
+                        disabled={!canProceedToNext()}
+                      >
+                        Próximo
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </form>
             </DialogContent>
@@ -468,7 +528,7 @@ export default function ScaledOffers() {
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant={getStatusBadgeVariant(offer.status)}>
-                    {offer.status}
+                    {offer.status === 'ativo' ? 'Escalando' : offer.status === 'pausado' ? 'Pré-Escala' : 'Validando'}
                   </Badge>
                   <Badge variant="outline">{offer.format}</Badge>
                   <Badge variant="outline">{offer.niche}</Badge>
