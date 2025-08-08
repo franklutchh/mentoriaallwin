@@ -443,14 +443,18 @@ export default function ScaledOffers() {
                 Nova Oferta
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent 
+              className="max-w-2xl"
+              onInteractOutside={(e) => e.preventDefault()}
+              onEscapeKeyDown={(e) => e.preventDefault()}
+            >
               <DialogHeader>
                 <DialogTitle>
                   {editingOffer ? 'Editar Oferta' : getStepTitle()}
                 </DialogTitle>
               </DialogHeader>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }} className="space-y-6">
                 {renderStepContent()}
                 
                 <div className="flex justify-between pt-6 border-t">
