@@ -459,18 +459,7 @@ export default function ScaledOffers() {
             <Plus className="mr-2 h-4 w-4" />
             Nova Oferta
           </Button>
-          <Dialog open={isDialogOpen} onOpenChange={(open) => {
-            if (open) {
-              setAllowClose(false);
-              setIsDialogOpen(true);
-            } else {
-              if (allowClose) {
-                setIsDialogOpen(false);
-              } else {
-                setIsDialogOpen(true);
-              }
-            }
-          }}>
+          <Dialog open={isDialogOpen}>
             <DialogContent 
               className="max-w-2xl"
               onInteractOutside={(e) => e.preventDefault()}
