@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Plus, Edit, Trash2, ExternalLink, Eye, ArrowRight, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -439,25 +439,27 @@ export default function ScaledOffers() {
               Ver Página Pública
             </a>
           </Button>
-          <Dialog open={isDialogOpen} onOpenChange={(open) => {
-            if (open) {
-              setAllowClose(false);
-              setIsDialogOpen(true);
-            } else {
-              if (allowClose) {
-                setIsDialogOpen(false);
-              } else {
-                // bloqueia fechamentos não autorizados
-                setIsDialogOpen(true);
-              }
-            }
+          <Button onClick={() => {
+            setEditingOffer(null);
+            setFormData({
+              title: '',
+              description: '',
+              advertiser_name: 'Admin',
+              status: 'ativo',
+              format: 'videos',
+              niche: '',
+              language: 'portugues',
+              thumbnail_url: '',
+              is_published: true,
+            });
+            setCurrentStep('basic');
+            setAllowClose(false);
+            setIsDialogOpen(true);
           }}>
-            <DialogTrigger asChild>
-              <Button onClick={() => resetForm()}>
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Oferta
-              </Button>
-            </DialogTrigger>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Oferta
+          </Button>
+          <Dialog open={isDialogOpen}>
             <DialogContent 
               className="max-w-2xl"
               onInteractOutside={(e) => e.preventDefault()}
