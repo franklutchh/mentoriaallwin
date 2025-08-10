@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Plus, Edit, Trash2, ExternalLink, Eye, ArrowRight, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -459,16 +459,31 @@ export default function ScaledOffers() {
             <Plus className="mr-2 h-4 w-4" />
             Nova Oferta
           </Button>
-          <Dialog open={isDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            if (open) {
+              setAllowClose(false);
+              setIsDialogOpen(true);
+            } else {
+              if (allowClose) {
+                setIsDialogOpen(false);
+              } else {
+                setIsDialogOpen(true);
+              }
+            }
+          }}>
             <DialogContent 
               className="max-w-2xl"
               onInteractOutside={(e) => e.preventDefault()}
               onEscapeKeyDown={(e) => e.preventDefault()}
+              onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <DialogHeader>
                 <DialogTitle>
                   {editingOffer ? 'Editar Oferta' : getStepTitle()}
                 </DialogTitle>
+                <DialogDescription>
+                  Preencha os campos e avance; o modal só fecha em Cancelar ou após salvar.
+                </DialogDescription>
               </DialogHeader>
               
               <form onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }} className="space-y-6">
@@ -598,7 +613,23 @@ export default function ScaledOffers() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <h3 className="text-lg font-semibold text-foreground mb-2">Nenhuma oferta criada</h3>
             <p className="text-muted-foreground mb-4">Comece criando sua primeira oferta escalada.</p>
-            <Button onClick={() => setIsDialogOpen(true)}>
+            <Button onClick={() => {
+              setEditingOffer(null);
+              setFormData({
+                title: '',
+                description: '',
+                advertiser_name: 'Admin',
+                status: 'ativo',
+                format: 'videos',
+                niche: '',
+                language: 'portugues',
+                thumbnail_url: '',
+                is_published: true,
+              });
+              setCurrentStep('basic');
+              setAllowClose(false);
+              setIsDialogOpen(true);
+            }}>
               <Plus className="mr-2 h-4 w-4" />
               Nova Oferta
             </Button>
