@@ -176,7 +176,7 @@ export default function Offers() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="links-theme min-h-screen bg-background">
       {/* Header */}
       <div className="bg-card border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">

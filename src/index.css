@@ -130,4 +130,44 @@
     background-color: hsl(var(--sidebar-primary));
     color: hsl(var(--sidebar-primary-foreground));
   }
-}
+  }
+
+  /* Tema especial para páginas públicas de links/ofertas */
+  .links-theme {
+    /* Fundo e texto */
+    --background: 255 50% 2%;           /* #030206 */
+    --foreground: 246 90% 78%;          /* #9C91FA */
+
+    /* Superfícies */
+    --card: 255 35% 6%;
+    --card-foreground: 246 90% 78%;
+    --popover: 255 35% 6%;
+    --popover-foreground: 246 90% 78%;
+
+    /* Cores de ação */
+    --primary: 246 90% 70%;             /* Botões/realces */
+    --primary-foreground: 0 0% 100%;    /* Texto nos botões */
+    --secondary: 255 25% 12%;
+    --secondary-foreground: 246 90% 78%;
+    --accent: 255 25% 10%;
+    --accent-foreground: 246 90% 78%;
+
+    /* Estados e bordas */
+    --muted: 255 25% 8%;
+    --muted-foreground: 246 35% 75%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 255 25% 12%;
+    --input: 255 25% 12%;
+    --ring: 246 90% 70%;
+
+    /* Sidebar (por compatibilidade, mesmo que não usada aqui) */
+    --sidebar-background: 255 50% 2%;
+    --sidebar-foreground: 246 90% 78%;
+    --sidebar-primary: 246 90% 70%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 246 90% 70% / 0.12;
+    --sidebar-accent-foreground: 246 90% 78%;
+    --sidebar-border: 255 25% 12%;
+    --sidebar-ring: 246 90% 70%;
+  }

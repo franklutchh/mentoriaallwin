@@ -476,6 +476,7 @@ export default function ScaledOffers() {
               onInteractOutside={(e) => e.preventDefault()}
               onEscapeKeyDown={(e) => e.preventDefault()}
               onCloseAutoFocus={(e) => e.preventDefault()}
+              onPointerDownOutside={(e) => e.preventDefault()}
             >
               <DialogHeader>
                 <DialogTitle>
